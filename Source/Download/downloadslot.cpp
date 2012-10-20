@@ -1,0 +1,132 @@
+#include "downloadslot.h"
+
+DownloadSlot::DownloadSlot(QUrl url)
+{
+    fileUrl = url;
+    status = IDLE;
+
+    mainLayout = new QVBoxLayout();
+    this->setLayout(mainLayout);
+
+    fileName = new QLabel("");
+    mainLayout->addWidget(fileName);
+
+    progressBar = new QProgressBar();
+    mainLayout->addWidget(progressBar);
+
+    downLayout = new QHBoxLayout();
+    mainLayout->addLayout(downLayout);
+
+    speedLabel = new QLabel("Speed: -");
+    downLayout->addWidget(speedLabel);
+
+    sizeLabel = new QLabel("0 %");
+    downLayout->addWidget(sizeLabel);
+}
+
+void DownloadSlot::start()
+{
+    if(!prepareFile()) status = ERROR;
+    else if (!startDownload()) status = ERROR;
+}
+
+bool DownloadSlot::prepareFile()
+{
+    QString name = QFileInfo(fileUrl.path()).fileName();
+
+    if (name.isEmpty()) name = "download";
+
+    if (QFile::exists(name))
+    {
+        int i = 0;
+        name += '.';
+        while (QFile::exists(name + QString::number(i))) ++i;
+
+        name += QString::number(i);
+    }
+
+    output.setFileName(name);
+
+    fileName->setText(name);
+
+    if (!output.open(QIODevice::WriteOnly)) return false;
+
+    return true;
+}
+
+bool DownloadSlot::startDownload()
+{
+    QNetworkRequest request(fileUrl);
+    currentDownload = manager.get(request);
+    connect(currentDownload, SIGNAL(downloadProgress(qint64,qint64)), this, SLOT(progressUpdate(qint64,qint64)));
+    connect(currentDownload, SIGNAL(finished()), this, SLOT(downloadEnded()));
+    connect(currentDownload, SIGNAL(readyRead()), this, SLOT(readyRead()));
+
+    downloadTime.start();
+
+    status = DOWNLOADING;
+    return true;
+}
+
+bool DownloadSlot::stopDownload()
+{
+    progressBar->hide();
+    output.close();
+
+    status = ABORTED;
+    return true;
+}
+
+bool DownloadSlot::pauseDownlad()
+{
+    return false;
+}
+
+void DownloadSlot::downloadEnded()
+{
+    progressBar->hide();
+    output.close();
+
+    speedLabel->setText(tr("<b>Downloaded</b>"));
+    sizeLabel->setVisible(false);
+
+    if(currentDownload->error())
+    {
+        //download ERROR
+        status = ERROR;
+    }
+    else status = DOWNLOADED;
+}
+
+void DownloadSlot::progressUpdate(qint64 bytesReceived, qint64 bytesTotal)
+{
+    progressBar->setMaximum(bytesTotal);
+    progressBar->setValue(bytesReceived);
+
+    double speed = bytesReceived * 1000.0 / downloadTime.elapsed();
+    QString unit;
+    if(speed < 1024) unit = "bytes/sec";
+    else if(speed < 1024*1024)
+    {
+        speed /= 1024;
+        unit = "kB/s";
+    }
+    else
+    {
+        speed /= 1024*1024;
+        unit = "MB/s";
+    }
+
+    speedLabel->setText(QString::fromLatin1("%1 %2").arg(speed, 3, 'f', 1).arg(unit));
+
+    if(bytesTotal < 1024) sizeLabel->setText(QString::fromLatin1("%1 bytes / %2 bytes").arg(bytesReceived).arg(bytesTotal));
+    else if(bytesTotal < 1024*1024) sizeLabel->setText(QString::fromLatin1("%1 kB / %2 kB").arg(bytesReceived / 1024).arg(bytesTotal / 1024));
+    else sizeLabel->setText(QString::fromLatin1("%1 MB / %2 MB").arg(bytesReceived / (1024*1024)).arg(bytesTotal / (1024*1024)));
+
+    progressBar->update();
+}
+
+void DownloadSlot::readyRead()
+{
+    output.write(currentDownload->readAll());
+}
