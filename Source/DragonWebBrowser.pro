@@ -27,7 +27,8 @@ HEADERS += \
     WebView/mainwindow.h \
     WebView/googlesuggest.h \
     WebView/authdialog.h \
-    WebView/mywebpage.h
+    WebView/mywebpage.h \
+    WebView/mytabwidget.h
 
 SOURCES += \
     Config/pages.cpp \
@@ -41,4 +42,5 @@ SOURCES += \
     WebView/googlesuggest.cpp \
     main.cpp \
     WebView/authdialog.cpp \
-    WebView/mywebpage.cpp
+    WebView/mywebpage.cpp \
+    WebView/mytabwidget.cpp

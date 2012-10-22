@@ -9,6 +9,7 @@
 #include "Cookies/mycookiejar.h"
 #include "Download/downloadmanager.h"
 #include "authdialog.h"
+#include "mytabwidget.h"
 
 class MainWindow : public QMainWindow
 {
@@ -46,7 +47,7 @@ private:
     QMenu *helpMenu;
     QAction *aboutAction;
 
-    QTabWidget* tabs;
+    MyTabWidget* tabs;
     QToolButton* addTabButton;
 
     QAuthenticator *authenticator;
@@ -58,9 +59,13 @@ private:
 
     bool checkSystemDir();
 
+public slots:
+    void createCustomTab(QWidget* widget, QString title);
+    void createPluginTab(QWidget* plugin, QString title);
+
 private slots:
     void saveAsImage();
-    void createTab();
+    tab* createStandardTab();
     void createTabWithUrl(QUrl url);
     void deleteTab(int index);
     void deleteCurrentTab();
@@ -75,11 +80,14 @@ private slots:
     void openPreferences();
     void exitApplication();
     virtual void closeEvent(QCloseEvent *);
+    virtual void resizeEvent(QResizeEvent *);
     void showAbout();
     void showDownloadManager();
     void authorizationRequest(QNetworkReply* reply,QAuthenticator* auth);
     void authorizationConfirm(QString user, QString password);
     void printRequest();
+    void openNewTabFromPage(MyWebPage* definiedPage);
+    void createConfigForNewStandardTab(tab* page);
 
 };
 

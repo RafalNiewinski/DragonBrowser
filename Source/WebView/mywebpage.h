@@ -26,7 +26,10 @@ public:
 
     QWebPage* createWindow(WebWindowType type)
     {
-        //return new PopupWebPage(type, p_QupZilla);
+        MyWebPage *page = new MyWebPage(cfg);
+        emit newTabFromPage(page);
+
+        return page;
     }
     //void javaScriptAlert(QWebFrame *originatingFrame, const QString &msg){}
     //bool javaScriptConfirm(QWebFrame *originatingFrame, const QString &msg){}
@@ -37,6 +40,11 @@ public:
     bool extension(Extension extension, const ExtensionOption *option, ExtensionReturn *output);
 
     void handleUnknownProtocol(const QUrl &url);
+
+
+signals:
+
+    void newTabFromPage(MyWebPage*);
 };
 
 #endif // MYWEBPAGE_H

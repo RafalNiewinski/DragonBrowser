@@ -12,12 +12,11 @@ class tab : public QWidget
 {
     Q_OBJECT
 public:
-    tab(QWidget *parent = 0, ConfigManager *configM = NULL);
+    tab(QWidget *parent = 0, ConfigManager *configM = NULL, MyWebPage *page = NULL);
     ~tab();
     QWebView* webView;
-private:
-
     MyWebPage *webPage;
+private:
 
     QVBoxLayout* layout;
     QHBoxLayout* menulayout;

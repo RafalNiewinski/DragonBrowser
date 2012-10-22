@@ -26,7 +26,7 @@ void MainWindow::createFileActions()
 {
     newTabAction = new QAction(tr("New tab"), this);
     newTabAction->setShortcut(Qt::CTRL + Qt::Key_T);
-    connect(newTabAction, SIGNAL(triggered()), this, SLOT(createTab()));
+    connect(newTabAction, SIGNAL(triggered()), this, SLOT(createStandardTab()));
 
     closeTabAction = new QAction(tr("Close tab"), this);
     closeTabAction->setShortcut(Qt::CTRL + Qt::Key_W);
@@ -109,7 +109,7 @@ void MainWindow::createUi()
     addTabButton->setAutoRaise(true);
     addTabButton->setToolTip(tr("New tab"));
 
-    tabs = new QTabWidget(this);
+    tabs = new MyTabWidget();
     tabs->setTabsClosable(true);
     tabs->setMovable(true);
     tabs->setDocumentMode(true);
@@ -130,13 +130,13 @@ void MainWindow::createUi()
 
     downloadManager = new DownloadManager();
 
-    createTab();
+    createStandardTab();
 }
 
 void MainWindow::createConnects()
 {
     connect(saveAsImageAction, SIGNAL(triggered()), this, SLOT(saveAsImage()));
-    connect(addTabButton, SIGNAL(clicked()), this, SLOT(createTab()));
+    connect(addTabButton, SIGNAL(clicked()), this, SLOT(createStandardTab()));
     connect(tabs, SIGNAL(tabCloseRequested(int)), this, SLOT(deleteTab(int)));
     connect(tabs, SIGNAL(currentChanged(int)), this, SLOT(setTitle(int)));
     connect(nManager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)), this, SLOT(authorizationRequest(QNetworkReply*,QAuthenticator*)));
@@ -159,41 +159,56 @@ void MainWindow::saveAsImage()
 
 }
 
-void MainWindow::createTab()
+tab* MainWindow::createStandardTab()
 {
     tab* page;
     page = new tab(0, configurationLoader);
     tabs->addTab(page, "Blank tab");
+    createConfigForNewStandardTab(page);
 
-    page->webView->page()->setNetworkAccessManager(nManager);
-
-    connect(page, SIGNAL(chTitleSig(QWidget*,QString)), this, SLOT(tabName(QWidget*,QString)));
-    connect(page, SIGNAL(downloadRequestSig(QUrl)), downloadManager, SLOT(startDownload(QUrl)));
-    connect(page, SIGNAL(openNewTab(QUrl)), this, SLOT(createTabWithUrl(QUrl)));
-    tabs->setCurrentIndex(tabs->indexOf(page));
+    return page;
 }
 
 void MainWindow::createTabWithUrl(QUrl url)
 {
-    tab* page;
-    page = new tab(0, configurationLoader);
-    tabs->addTab(page, "Blank tab");
+    tab* page = createStandardTab();
+    page->webView->setUrl(url);
+}
 
+void MainWindow::openNewTabFromPage(MyWebPage *definiedPage)
+{
+    tab* page;
+    page = new tab(0, configurationLoader, definiedPage);
+    tabs->addTab(page, "Blank tab");
+    createConfigForNewStandardTab(page);
+}
+
+void MainWindow::createCustomTab(QWidget *widget, QString title)
+{}
+
+void MainWindow::createPluginTab(QWidget *plugin, QString title)
+{}
+
+void MainWindow::createConfigForNewStandardTab(tab *page)
+{
     page->webView->page()->setNetworkAccessManager(nManager);
 
     connect(page, SIGNAL(chTitleSig(QWidget*,QString)), this, SLOT(tabName(QWidget*,QString)));
     connect(page, SIGNAL(downloadRequestSig(QUrl)), downloadManager, SLOT(startDownload(QUrl)));
     connect(page, SIGNAL(openNewTab(QUrl)), this, SLOT(createTabWithUrl(QUrl)));
-
-    page->webView->setUrl(url);
+    connect(page->webPage, SIGNAL(newTabFromPage(MyWebPage*)), this, SLOT(openNewTabFromPage(MyWebPage*)));
     tabs->setCurrentIndex(tabs->indexOf(page));
 }
 
 void MainWindow::deleteTab(int index)
 {
-    if(tabs->count() == 0) exitApplication();
-    tab *tabwidget = (tab*)tabs->widget(index);
-    delete tabwidget;
+    if(tabs->count() == 1) exitApplication();
+    else
+    {
+        QWidget *tabwidget = tabs->widget(index);
+        tabs->removeTab(index);
+        delete tabwidget;
+    }
 }
 
 void MainWindow::deleteCurrentTab()
@@ -202,9 +217,7 @@ void MainWindow::deleteCurrentTab()
 }
 
 void MainWindow::newWindow()
-{
-    //system("./DragonWebBrowser");
-}
+{}
 
 void MainWindow::setTitle(int id)
 {
@@ -217,7 +230,8 @@ void MainWindow::setTitle(int id)
 }
 
 void MainWindow::tabName(QWidget* idw, QString title)
-{
+{    
+    if(title.isNull()){ tab *tabwidget = (tab*)idw; title = tabwidget->webView->url().toString(); }
     tabs->setTabText(tabs->indexOf(idw), title);
 }
 
@@ -275,8 +289,12 @@ void MainWindow::exitApplication()
 
 void MainWindow::closeEvent(QCloseEvent *)
 {
-    cookieJar->saveAllCookies();
-    QApplication::exit(0);
+    exitApplication();
+}
+
+void MainWindow::resizeEvent(QResizeEvent *)
+{
+    tabs->updateSize();
 }
 
 bool MainWindow::checkSystemDir()

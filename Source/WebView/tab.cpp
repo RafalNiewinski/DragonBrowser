@@ -2,9 +2,10 @@
 
 #define GSEARCH_URL "http://www.google.com/search?q=%1"
 
-tab::tab(QWidget *parent, ConfigManager *configM) :  QWidget(parent)
+tab::tab(QWidget *parent, ConfigManager *configM, MyWebPage* page) :  QWidget(parent)
 {
     configLoader = configM;
+    webPage = page;
 
     createUi();
     createSettings();
@@ -41,7 +42,7 @@ void tab::createUi()
     url.setUrl("http://google.pl/");
 
     webView = new QWebView();
-    webPage = new MyWebPage(configLoader);
+    if(webPage == NULL) webPage = new MyWebPage(configLoader);
     webView->setPage(webPage);
     webView->page()->setLinkDelegationPolicy(QWebPage::DelegateAllLinks);
 
@@ -128,7 +129,7 @@ void tab::newUrl()
     QString adress;
     adress = urlAdress->text();
 
-    if(adress.indexOf("://", 1) != -1 && adress.indexOf(" ") == -1)
+    if(adress.indexOf(":", 1) != -1 && adress.indexOf(" ") == -1)
     {
         url.setUrl(adress);
         webView->setUrl(url);
