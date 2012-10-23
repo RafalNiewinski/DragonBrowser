@@ -95,10 +95,26 @@ bool MyWebPage::extension(Extension extension, const ExtensionOption *option, Ex
 
 
 
-    const QUrl &loadedUrl = exOption->url;
-    exReturn->baseUrl = loadedUrl;
+    const QUrl &errorUrl = exOption->url;
+    exReturn->baseUrl = errorUrl;
 
-    exReturn->content = errorString.toUtf8();
+    QFile file(qApp->applicationDirPath() + "/Content/HTML/error.html");
+    file.open(QFile::ReadOnly);
+    QString errorHtml = file.readAll();
+    errorHtml.replace(QLatin1String("%TITLE%"), tr("An error has occurred while loading the page."));
+
+    QString head = errorUrl.host().isEmpty() ? tr("Dragon Browser can't load page.") : tr("Dragon Browser can't load page from %1").arg(errorUrl.host());
+
+    errorHtml.replace(QLatin1String("%HEAD%"), errorString);
+    errorHtml.replace(QLatin1String("%FROM%"), head);
+
+    errorHtml.replace(QLatin1String("%LI-1%"), tr("Check that the entered URL is correct."));
+    errorHtml.replace(QLatin1String("%LI-2%"), tr("Check if your computer is still connected to the Internet."));
+    errorHtml.replace(QLatin1String("%LI-3%"), tr("If your other network programs works fine check if your firewall is not blocking Dragon."));
+
+    errorHtml.replace(QLatin1String("%RELOAD%"), tr("Try Again"));
+
+    exReturn->content = QString(errorHtml + "<span id=\"dragon-error-page\"></span>").toUtf8();
     return true;
 }
 
