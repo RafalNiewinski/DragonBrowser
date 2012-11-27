@@ -132,21 +132,21 @@ void tab::newUrl()
     if(adress.indexOf(":", 1) != -1 && adress.indexOf(" ") == -1)
     {
         url.setUrl(adress);
-        webView->setUrl(url);
+        webView->load(url);
         return;
     }
     if(adress.indexOf(".", 1) != -1 && adress.indexOf(" ") == -1)
     {
         adress = "http://"+adress;
         url.setUrl(adress);
-        webView->setUrl(url);
+        webView->load(url);
         return;
     }
 
     //IF ADRESS NOT VALID SEARCH WITH GOOGLE
     adress = QString(GSEARCH_URL).arg(adress);
     url.setUrl(adress);
-    webView->setUrl(url);
+    webView->load(url);
 }
 
 void tab::changeIcon()
@@ -182,7 +182,6 @@ void tab::loadProgress(int progress)
 
 void tab::loadFinish(bool ok)
 {
-
 }
 
 void tab::linkClick(QUrl url)
@@ -242,10 +241,10 @@ void tab::openLinkInNewTab()
 
 void tab::downloadRequest(QNetworkReply *reply)
 {
-    emit downloadRequestSig(reply->url());
+    emit downloadRequestSig(reply);
 }
 
 void tab::downloadRequset(QNetworkRequest request)
 {
-    emit downloadRequestSig(request.url());
+    emit downloadRequestSig(request);
 }

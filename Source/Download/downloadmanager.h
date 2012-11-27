@@ -15,6 +15,8 @@ public:
 signals:
 public slots:
 
+    void startDownload(QNetworkRequest request);
+    void startDownload(QNetworkReply *reply);
     void startDownload(QUrl url);
 
 private:

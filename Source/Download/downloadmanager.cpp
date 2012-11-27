@@ -10,12 +10,25 @@ DownloadManager::DownloadManager(QWidget *parent) : QMainWindow(parent)
     setCentralWidget(mainWidget);
 }
 
-void DownloadManager::startDownload(QUrl url)
+void DownloadManager::startDownload(QNetworkRequest request)
 {
-    DownloadSlot *download = new DownloadSlot(url);
+    QNetworkReply *reply = manager->get(request);
+    startDownload(reply);
+}
+
+void DownloadManager::startDownload(QNetworkReply *reply)
+{
+    DownloadSlot *download = new DownloadSlot(reply->url());
     mainLayout->addWidget(download);
     downloads.append(download);
     download->start();
 
     if(!this->isVisible()) this->show();
+    if(!this->isActiveWindow()) this->activateWindow();
+}
+
+void DownloadManager::startDownload(QUrl url)
+{
+    QNetworkRequest request(url);
+    startDownload(request);
 }

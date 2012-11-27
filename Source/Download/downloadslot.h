@@ -17,6 +17,7 @@ public:
     QHBoxLayout *downLayout;
     QLabel *speedLabel;
     QLabel *sizeLabel;
+    QPushButton *actionButton;
 
 
     QNetworkAccessManager manager;
@@ -44,6 +45,7 @@ public slots:
     bool stopDownload();
     bool pauseDownlad();
     void downloadEnded();
+    void buttonAction();
 
     void progressUpdate(qint64,qint64);
     void readyRead();

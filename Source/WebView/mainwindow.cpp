@@ -172,7 +172,7 @@ tab* MainWindow::createStandardTab()
 void MainWindow::createTabWithUrl(QUrl url)
 {
     tab* page = createStandardTab();
-    page->webView->setUrl(url);
+    page->webView->load(url);
 }
 
 void MainWindow::openNewTabFromPage(MyWebPage *definiedPage)
@@ -194,7 +194,8 @@ void MainWindow::createConfigForNewStandardTab(tab *page)
     page->webView->page()->setNetworkAccessManager(nManager);
 
     connect(page, SIGNAL(chTitleSig(QWidget*,QString)), this, SLOT(tabName(QWidget*,QString)));
-    connect(page, SIGNAL(downloadRequestSig(QUrl)), downloadManager, SLOT(startDownload(QUrl)));
+    connect(page, SIGNAL(downloadRequestSig(QNetworkRequest)), downloadManager, SLOT(startDownload(QNetworkRequest)));
+    connect(page, SIGNAL(downloadRequestSig(QNetworkReply*)), downloadManager, SLOT(startDownload(QNetworkReply*)));
     connect(page, SIGNAL(openNewTab(QUrl)), this, SLOT(createTabWithUrl(QUrl)));
     connect(page->webPage, SIGNAL(newTabFromPage(MyWebPage*)), this, SLOT(openNewTabFromPage(MyWebPage*)));
     tabs->setCurrentIndex(tabs->indexOf(page));
@@ -327,6 +328,14 @@ void MainWindow::showAbout()
     QPushButton *ok = new QPushButton("OK");
     leftL->addWidget(ok);
     connect(ok, SIGNAL(clicked()), about, SLOT(close()));
+
+    QTextEdit *authors = new QTextEdit();
+    authors->setReadOnly(true);
+    authors->append("<center><font size=4><b>Dragon Web Browser</b></font><center>");
+    authors->append("<b>Main Developer</b><br/>Rafał Niewiński");
+    authors->append("");
+    authors->append("<b>Crystal Dragon Cloud Server</b><br/>Jakub Czarniecki");
+    rightL->addWidget(authors);
 
     mainL->addLayout(leftL);
     mainL->addLayout(rightL);

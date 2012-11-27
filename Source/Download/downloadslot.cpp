@@ -22,6 +22,10 @@ DownloadSlot::DownloadSlot(QUrl url)
 
     sizeLabel = new QLabel("0 %");
     downLayout->addWidget(sizeLabel);
+
+    actionButton = new QPushButton(tr("Stop"));
+    downLayout->addWidget(actionButton);
+    connect(actionButton, SIGNAL(clicked()), this, SLOT(buttonAction()));
 }
 
 void DownloadSlot::start()
@@ -70,10 +74,13 @@ bool DownloadSlot::startDownload()
 
 bool DownloadSlot::stopDownload()
 {
+    currentDownload->abort();
     progressBar->hide();
     output.close();
 
     status = ABORTED;
+    speedLabel->setText(tr("<b>Aborted</b>"));
+    buttonAction();
     return true;
 }
 
@@ -96,6 +103,7 @@ void DownloadSlot::downloadEnded()
         status = ERROR;
     }
     else status = DOWNLOADED;
+    buttonAction();
 }
 
 void DownloadSlot::progressUpdate(qint64 bytesReceived, qint64 bytesTotal)
@@ -129,4 +137,12 @@ void DownloadSlot::progressUpdate(qint64 bytesReceived, qint64 bytesTotal)
 void DownloadSlot::readyRead()
 {
     output.write(currentDownload->readAll());
+}
+
+void DownloadSlot::buttonAction()
+{
+    if(status == DOWNLOADING) stopDownload();
+    else if(status == DOWNLOADED) actionButton->hide();
+    else if(status == ERROR) actionButton->hide();
+    else if(status == ABORTED) actionButton->hide();
 }

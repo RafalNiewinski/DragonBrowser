@@ -43,7 +43,8 @@ private:
 signals:
     void chTitleSig(QWidget* wig, QString title);
     void openNewTab(QUrl url);
-    void downloadRequestSig(QUrl url);
+    void downloadRequestSig(QNetworkRequest request);
+    void downloadRequestSig(QNetworkReply *reply);
 
 public slots:
     void chTitle(QString title);
