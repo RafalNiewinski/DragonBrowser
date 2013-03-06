@@ -1,17 +1,22 @@
 #include "mainwindow.h"
 #include <string>
 #include <iostream>
+#include <QtGlobal>
 #include "tab.h"
 #include "Config/configdialog.h"
 
 MainWindow::MainWindow()
 {
-    QTextCodec::setCodecForTr (QTextCodec::codecForName ("UTF-8"));
+    #if QT_VERSION >= 0x050000
+            qApp->setStyle("fusion");
+    #else
+            QTextCodec::setCodecForTr (QTextCodec::codecForName ("UTF-8")); // QT5 default encoding UTF-8
+            QApplication::setStyle(new QPlastiqueStyle); //QT5 do not have trash styles
+    #endif
+
 
     setWindowTitle("Dragon Web Browser Alpha");
     //setWindowIcon(QIcon("/path/window_icon.png"));
-
-    QApplication::setStyle(new QPlastiqueStyle);
 
     createFileActions();
     createMenus();
@@ -47,7 +52,7 @@ void MainWindow::createFileActions()
     quitAction->setShortcut(Qt::CTRL + Qt::Key_Q);
     connect(quitAction, SIGNAL(triggered()), this, SLOT(exitApplication()));
 
-    viewSourceAction = new QAction("Source code", this);
+    viewSourceAction = new QAction(tr("Source code"), this);
     connect(viewSourceAction, SIGNAL(triggered()), SLOT(viewSource()));
 
     downloadManagerAction = new QAction(tr("Download manager"), this);
@@ -130,7 +135,8 @@ void MainWindow::createUi()
 
     downloadManager = new DownloadManager();
 
-    createStandardTab();
+    if(configurationLoader->startAction == RestorePages) restoreSession();
+    else createStandardTab();
 }
 
 void MainWindow::createConnects()
@@ -285,6 +291,7 @@ void MainWindow::openPreferences()
 void MainWindow::exitApplication()
 {
     cookieJar->saveAllCookies();
+    saveSession();
     QApplication::exit(0);
 }
 
@@ -324,6 +331,12 @@ void MainWindow::showAbout()
 
     QLabel *builtDate = new QLabel(tr("Built date:\n") + QString::fromLocal8Bit(BUILDDATE) + " " + QString::fromLocal8Bit(BUILDTIME));
     leftL->addWidget(builtDate);
+
+    QLabel *webkitVersion = new QLabel(tr("Webkit version:\n") + qWebKitVersion());
+    leftL->addWidget(webkitVersion);
+
+    QLabel *qtVersion = new QLabel(tr("Qt Libraries version:\n") + qVersion());
+    leftL->addWidget(qtVersion);
 
     QPushButton *ok = new QPushButton("OK");
     leftL->addWidget(ok);
@@ -370,3 +383,25 @@ void MainWindow::printRequest()
     tab *page = (tab*)tabs->currentWidget();
     page->printPage(page->webView->page()->currentFrame());
 }
+
+bool MainWindow::saveSession()
+{
+    if(configurationLoader->saveSessionData(tabs->generateAllOpenTabUrls()))
+        return true;
+    else
+        return false;
+}
+
+bool MainWindow::restoreSession()
+{
+    QList<QString> *urls = configurationLoader->restoreSessionData();
+
+    for(int i=0; i < urls->count(); i++)
+    {
+        createTabWithUrl(urls->at(i));
+    }
+
+    return true;
+}
+
+

@@ -1,8 +1,13 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QtGui/QMainWindow>
-#include <QtGui>
+#include <QtGlobal>
+#if QT_VERSION >= 0x050000
+        #include <QtWidgets/QtWidgets>
+#else
+
+#endif
+
 #include <QtWebKit>
 #include "tab.h"
 #include "Config/configmanager.h"
@@ -88,6 +93,8 @@ private slots:
     void printRequest();
     void openNewTabFromPage(MyWebPage* definiedPage);
     void createConfigForNewStandardTab(tab* page);
+    bool saveSession();
+    bool restoreSession();
 
 };
 

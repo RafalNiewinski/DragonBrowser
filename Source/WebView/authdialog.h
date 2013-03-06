@@ -1,7 +1,12 @@
 #ifndef AUTHDIALOG_H
 #define AUTHDIALOG_H
 
-#include <QtGui>
+#include <QtGlobal>
+#if QT_VERSION >= 0x050000
+        #include <QtWidgets/QtWidgets>
+#else
+        #include <QtGui>
+#endif
 
 class AuthDialog : public QDialog
 {

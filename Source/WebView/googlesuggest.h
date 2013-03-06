@@ -1,7 +1,13 @@
 #ifndef GOOGLESUGGEST_H
 #define GOOGLESUGGEST_H
 
-#include <QtGui>
+#include <QtGlobal>
+#if QT_VERSION >= 0x050000
+        #include <QtWidgets/QtWidgets>
+#else
+        #include <QtGui>
+#endif
+
 #include <QtNetwork>
 #include <QObject>
 

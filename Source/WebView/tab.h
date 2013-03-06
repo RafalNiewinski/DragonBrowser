@@ -1,9 +1,15 @@
 #ifndef TAB_H
 #define TAB_H
 
-#include <QWidget>
-#include <QtGui>
-#include <QtWebKit>
+#include <QtGlobal>
+#if QT_VERSION >= 0x050000
+        #include <QtWidgets/QtWidgets>
+        #include <QtWebKitWidgets/QtWebKitWidgets>
+#else
+        #include <QtGui>
+        #include <QtWebKit>
+#endif
+
 #include "Config/configmanager.h"
 #include "googlesuggest.h"
 #include "mywebpage.h"

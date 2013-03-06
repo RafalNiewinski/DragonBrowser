@@ -4,14 +4,20 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network
+
+contains(QT_VERSION, 4.6)
+{
+    QT       += core gui network webkit
+}
+contains(QT_VERSION, 5.0)
+{
+    QT       += core widgets network webkit webkitwidgets
+}
 
 TARGET = DragonWebBrowser
 TEMPLATE = app
 
 #TRANSLATIONS = translation_pl.ts
-
-QT += core gui webkit
 
 DEFINES += BUILDDATE=__DATE__
 DEFINES += BUILDTIME=__TIME__

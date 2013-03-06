@@ -46,6 +46,11 @@ public:
     bool TiledBackingStoreEnabled;
     bool FrameFlatteningEnabled;
     bool SiteSpecificQuirksEnabled;
+
+    static QString DragonVersion();
+
+    bool saveSessionData(QList<QString>* urls);
+    QList<QString>* restoreSessionData();
 };
 
 #endif // CONFIGMANAGER_H

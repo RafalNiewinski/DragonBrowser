@@ -1,4 +1,9 @@
-#include <QtGui>
+#include <QtGlobal>
+#if QT_VERSION >= 0x050000
+        #include <QtWidgets/QtWidgets>
+#else
+        #include <QtGui>
+#endif
 
 #include "configdialog.h"
 #include "pages.h"

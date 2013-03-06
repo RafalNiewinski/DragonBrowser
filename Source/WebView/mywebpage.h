@@ -1,7 +1,13 @@
 #ifndef MYWEBPAGE_H
 #define MYWEBPAGE_H
 
-#include <QWebPage>
+#include <QtGlobal>
+#if QT_VERSION >= 0x050000
+        #include <QtWebKitWidgets/QtWebKitWidgets>
+#else
+        #include <QtWebKit>
+#endif
+
 #include "Config/configmanager.h"
 #include <QDesktopServices>
 
@@ -16,12 +22,14 @@ public:
 
     QString userAgentForUrl(const QUrl &url) const
     {
-        //user agent for GOOGLE SEARCH PAGE
-        if(url.toString().toStdString().substr(0, 18) == "http://www.google." || url.toString().toStdString().substr(0, 19) == "https://www.google.")
-            return QString("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.4 (KHTML, like Gecko) Chrome/22.0.1229.92 Safari/537.4");
+        #ifdef Q_OS_LINUX
+            //user agent for GOOGLE SEARCH PAGE
+            if(url.toString().toStdString().substr(0, 18) == "http://www.google." || url.toString().toStdString().substr(0, 19) == "https://www.google.")
+                return QString("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.4 (KHTML, like Gecko) Chrome/22.0.1229.92 Safari/537.4");
 
 
-        return QString("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.34 (KHTML, like Gecko) DragonBrowser/0.0.1.ALPHA Safari/534.34");
+            return QString("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/" + qWebKitVersion() + " (KHTML, like Gecko) DragonBrowser/" + ConfigManager::DragonVersion() + " Safari/" + qWebKitVersion());
+        #endif
     }
 
     QWebPage* createWindow(WebWindowType type)

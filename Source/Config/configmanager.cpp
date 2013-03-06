@@ -1,5 +1,10 @@
 #include "configmanager.h"
 
+//DEFINES
+#define DRAGON_VERSION "0.0.1.ALPHA"
+#define DEVEL_BUILD
+//DEFINES
+
 ConfigManager::ConfigManager()
 {
     QString env = getenv("HOME");
@@ -55,6 +60,13 @@ ConfigManager::ConfigManager()
         if(command == "TiledBackingStoreEnabled") this->TiledBackingStoreEnabled = atoi(argument.c_str());
         if(command == "FrameFlatteningEnabled") this->FrameFlatteningEnabled = atoi(argument.c_str());
         if(command == "SiteSpecificQuirksEnabled") this->SiteSpecificQuirksEnabled = atoi(argument.c_str());
+
+        if(command == "StartAction")
+        {
+            if(argument == "StartupScreen") startAction = StartupScreen;
+            if(argument == "HomePage") startAction = HomePage;
+            if(argument == "RestorePages") startAction = RestorePages;
+        }
         }
 
 
@@ -62,6 +74,45 @@ ConfigManager::ConfigManager()
         argument.clear();
         endofcommand = false;
     }
-
+startAction = RestorePages;
     file->close();
+}
+
+QString ConfigManager::DragonVersion()
+{
+    return DRAGON_VERSION;
+}
+
+bool ConfigManager::saveSessionData(QList<QString>* urls)
+{
+    QString env = getenv("HOME");
+    QFile *sessionFile = new QFile(env + "/.DragonWebBrowser/session.last");
+    sessionFile->open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream out(sessionFile);
+
+    for(int i=0; i < urls->length(); i++)
+    {
+        out << urls->at(i) <<"\n";
+    }
+
+    sessionFile->close();
+
+    return true;
+}
+
+QList<QString>* ConfigManager::restoreSessionData()
+{
+    QString env = getenv("HOME");
+    QFile *sessionFile = new QFile(env + "/.DragonWebBrowser/session.last");
+    sessionFile->open(QIODevice::ReadOnly | QIODevice::Text);
+    QTextStream in(sessionFile);
+
+    QList<QString> *urls = new QList<QString>();
+
+    while(!in.atEnd())
+    {
+        urls->append(in.readLine());
+    }
+
+    return urls;
 }
