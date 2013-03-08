@@ -124,19 +124,30 @@ void MainWindow::createUi()
 
     layout->addWidget(tabs);
 
-    checkSystemDir();
-
     cookieJar = new MyCookieJar();
     nManager = new QNetworkAccessManager();
     nManager->setCookieJar(cookieJar);
 
     configurationLoader = new ConfigManager();
-    cookieJar->loadAllCookies();
 
-    downloadManager = new DownloadManager();
+    if(ConfigManager::checkSystemDir())
+    {
+        configurationLoader->loadConfiguration();
+        cookieJar->loadAllCookies();
 
-    if(configurationLoader->startAction == RestorePages) restoreSession();
-    else createStandardTab();
+        downloadManager = new DownloadManager();
+
+        if(configurationLoader->startAction == RestorePages) restoreSession();
+        else createStandardTab();
+    }
+    else
+    {
+        downloadManager = new DownloadManager();
+        createStandardTab();
+
+        QMessageBox::warning(this, "Profile Directory Error", tr("A problem with creating a user profile directory.\nIf not solved all your data such as configuration can not be saved. \nMake sure that the Dragon has permission to write to the user's home directory."));
+    }
+
 }
 
 void MainWindow::createConnects()
@@ -290,8 +301,16 @@ void MainWindow::openPreferences()
 
 void MainWindow::exitApplication()
 {
-    cookieJar->saveAllCookies();
-    saveSession();
+    if(ConfigManager::checkSystemDir())
+    {
+        cookieJar->saveAllCookies();
+        saveSession();
+    }
+    else
+    {
+        QMessageBox::warning(this, "Profile Directory Error", tr("A problem with creating a user profile directory.\nYour personal settings will not be saved until it's fixed.\n\n\nMake sure that the Dragon has permission to write to the user's home directory."));
+    }
+
     QApplication::exit(0);
 }
 
@@ -303,21 +322,6 @@ void MainWindow::closeEvent(QCloseEvent *)
 void MainWindow::resizeEvent(QResizeEvent *)
 {
     tabs->updateSize();
-}
-
-bool MainWindow::checkSystemDir()
-{
-    #ifdef Q_OS_LINUX
-
-    QString env = getenv("HOME");
-
-    if(QDir(env + "/.DragonWebBrowser").exists() == true) return true;
-    if(QDir().mkdir(env + "/.DragonWebBrowser") != true) return true;
-    else return false;
-
-    #endif
-
-    return true;
 }
 
 void MainWindow::showAbout()

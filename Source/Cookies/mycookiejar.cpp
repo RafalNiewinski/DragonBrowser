@@ -3,6 +3,7 @@
 #include <QList>
 #include <QTextStream>
 #include <QDateTime>
+#include <Config/configmanager.h>
 
 MyCookieJar::MyCookieJar()
 {
@@ -11,13 +12,7 @@ MyCookieJar::MyCookieJar()
 
 bool MyCookieJar::saveAllCookies()
 {
-    QString env = getenv("HOME");
-
-    #ifdef Q_OS_LINUX
-    QFile file(env + "/.DragonWebBrowser/cookies.jar");
-    #else
-    QFile file("./cookies.jar");
-    #endif
+    QFile file(ConfigManager::DragonUserDirPath() + "/cookies.jar");
 
     file.open(QIODevice::WriteOnly);
 
@@ -70,13 +65,7 @@ bool MyCookieJar::saveAllCookies()
 
 bool MyCookieJar::loadAllCookies()
 {
-    QString env = getenv("HOME");
-
-    #ifdef Q_OS_LINUX
-    QFile file(env + "/.DragonWebBrowser/cookies.jar");
-    #else
-    QFile file("./cookies.jar");
-    #endif
+    QFile file(ConfigManager::DragonUserDirPath() + "/cookies.jar");
 
     if(file.open(QIODevice::ReadOnly) != true) return true;
     QTextStream st(&file);

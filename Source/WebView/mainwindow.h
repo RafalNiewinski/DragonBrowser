@@ -62,8 +62,6 @@ private:
     void createUi();
     void createConnects();
 
-    bool checkSystemDir();
-
 public slots:
     void createCustomTab(QWidget* widget, QString title);
     void createPluginTab(QWidget* plugin, QString title);

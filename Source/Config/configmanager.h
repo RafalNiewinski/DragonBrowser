@@ -47,7 +47,13 @@ public:
     bool FrameFlatteningEnabled;
     bool SiteSpecificQuirksEnabled;
 
+    bool loadConfiguration();
+
     static QString DragonVersion();
+
+    static QString DragonUserDirPath();
+
+    static bool checkSystemDir();
 
     bool saveSessionData(QList<QString>* urls);
     QList<QString>* restoreSessionData();

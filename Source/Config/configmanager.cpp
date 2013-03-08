@@ -7,8 +7,11 @@
 
 ConfigManager::ConfigManager()
 {
-    QString env = getenv("HOME");
-    file = new QFile(env + "/.DragonWebBrowser/config.cfg");
+}
+
+bool ConfigManager::loadConfiguration()
+{
+    file = new QFile(DragonUserDirPath() + "/config.cfg");
     file->open(QIODevice::ReadOnly | QIODevice::Text);
     QTextStream in(file);
 
@@ -74,8 +77,10 @@ ConfigManager::ConfigManager()
         argument.clear();
         endofcommand = false;
     }
-startAction = RestorePages;
+
     file->close();
+
+    return true;
 }
 
 QString ConfigManager::DragonVersion()
@@ -83,10 +88,28 @@ QString ConfigManager::DragonVersion()
     return DRAGON_VERSION;
 }
 
+QString ConfigManager::DragonUserDirPath()
+{
+#ifdef Q_OS_LINUX
+    QString env = getenv("HOME");
+    return env + "/.DragonWebBrowser";
+#endif
+}
+
+bool ConfigManager::checkSystemDir()
+{
+    #ifdef Q_OS_LINUX
+
+    if(QDir(DragonUserDirPath()).exists() == true) return true;
+    if(QDir().mkdir(DragonUserDirPath()) == true) return true;
+    else return false;
+
+    #endif
+}
+
 bool ConfigManager::saveSessionData(QList<QString>* urls)
 {
-    QString env = getenv("HOME");
-    QFile *sessionFile = new QFile(env + "/.DragonWebBrowser/session.last");
+    QFile *sessionFile = new QFile(DragonUserDirPath() + "/session.last");
     sessionFile->open(QIODevice::WriteOnly | QIODevice::Text);
     QTextStream out(sessionFile);
 
@@ -102,8 +125,7 @@ bool ConfigManager::saveSessionData(QList<QString>* urls)
 
 QList<QString>* ConfigManager::restoreSessionData()
 {
-    QString env = getenv("HOME");
-    QFile *sessionFile = new QFile(env + "/.DragonWebBrowser/session.last");
+    QFile *sessionFile = new QFile(DragonUserDirPath() + "/session.last");
     sessionFile->open(QIODevice::ReadOnly | QIODevice::Text);
     QTextStream in(sessionFile);
 
