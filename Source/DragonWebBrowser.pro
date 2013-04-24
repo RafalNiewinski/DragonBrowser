@@ -34,7 +34,9 @@ HEADERS += \
     WebView/googlesuggest.h \
     WebView/authdialog.h \
     WebView/mywebpage.h \
-    WebView/mytabwidget.h
+    WebView/mytabwidget.h \
+    API/dragoninterface.h \
+    API/dragonpluginmanager.h
 
 SOURCES += \
     Config/pages.cpp \
@@ -49,4 +51,5 @@ SOURCES += \
     main.cpp \
     WebView/authdialog.cpp \
     WebView/mywebpage.cpp \
-    WebView/mytabwidget.cpp
+    WebView/mytabwidget.cpp \
+    API/dragonpluginmanager.cpp

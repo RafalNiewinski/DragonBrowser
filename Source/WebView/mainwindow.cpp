@@ -148,6 +148,9 @@ void MainWindow::createUi()
         QMessageBox::warning(this, "Profile Directory Error", tr("A problem with creating a user profile directory.\nIf not solved all your data such as configuration can not be saved. \nMake sure that the Dragon has permission to write to the user's home directory."));
     }
 
+    pluginManager = new DragonPluginManager();
+    pluginManager->searchPlugins();
+
 }
 
 void MainWindow::createConnects()

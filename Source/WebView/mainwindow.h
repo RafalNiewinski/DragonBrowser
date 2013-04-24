@@ -15,6 +15,7 @@
 #include "Download/downloadmanager.h"
 #include "authdialog.h"
 #include "mytabwidget.h"
+#include "API/dragonpluginmanager.h"
 
 class MainWindow : public QMainWindow
 {
@@ -56,6 +57,8 @@ private:
     QToolButton* addTabButton;
 
     QAuthenticator *authenticator;
+
+    DragonPluginManager *pluginManager;
 
     void createFileActions();
     void createMenus();
