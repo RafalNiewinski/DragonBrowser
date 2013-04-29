@@ -31,7 +31,7 @@ signals:
 public:
     virtual void Initialize() = 0;
     virtual bool installPlugin() = 0;
-    virtual void timeTask() {}
+    virtual void timeTask() = 0;
     virtual void uninstallPlugin() = 0;
     virtual void stopPlugin() = 0;
 

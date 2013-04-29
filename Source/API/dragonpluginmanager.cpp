@@ -33,6 +33,8 @@ bool DragonPluginManager::searchPlugins()
 
     delete userPath;
     delete globalPath;
+
+    return true;
 }
 
 bool DragonPluginManager::loadPlugins()

@@ -11,6 +11,7 @@
 #include <QtWebKit>
 #include "tab.h"
 #include "Config/configmanager.h"
+#include "Config/databasemanager.h"
 #include "Cookies/mycookiejar.h"
 #include "Download/downloadmanager.h"
 #include "authdialog.h"
@@ -29,6 +30,7 @@ private:
     QVBoxLayout* layout;
 
     ConfigManager *configurationLoader;
+    DatabaseManager *databaseManager;
 
     MyCookieJar *cookieJar;
     QNetworkAccessManager *nManager;

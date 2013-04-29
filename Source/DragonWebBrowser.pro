@@ -7,11 +7,11 @@
 
 contains(QT_VERSION, 4.6)
 {
-    QT       += core gui network webkit
+    QT       += core gui network webkit sql
 }
 contains(QT_VERSION, 5.0)
 {
-    QT       += core widgets network webkit webkitwidgets
+    QT       += core widgets network webkit webkitwidgets sql
 }
 
 TARGET = DragonWebBrowser
@@ -36,7 +36,8 @@ HEADERS += \
     WebView/mywebpage.h \
     WebView/mytabwidget.h \
     API/dragoninterface.h \
-    API/dragonpluginmanager.h
+    API/dragonpluginmanager.h \
+    Config/databasemanager.h
 
 SOURCES += \
     Config/pages.cpp \
@@ -52,4 +53,5 @@ SOURCES += \
     WebView/authdialog.cpp \
     WebView/mywebpage.cpp \
     WebView/mytabwidget.cpp \
-    API/dragonpluginmanager.cpp
+    API/dragonpluginmanager.cpp \
+    Config/databasemanager.cpp

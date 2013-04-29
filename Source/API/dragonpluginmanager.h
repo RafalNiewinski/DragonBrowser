@@ -1,7 +1,6 @@
 #ifndef DRAGONPLUGINMANAGER_H
 #define DRAGONPLUGINMANAGER_H
 
-#define INTERFACE_VERSION 1
 #define MIN_PLUGIN_INTERFACE 1
 
 #include <API/dragoninterface.h>

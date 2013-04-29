@@ -129,11 +129,13 @@ void MainWindow::createUi()
     nManager->setCookieJar(cookieJar);
 
     configurationLoader = new ConfigManager();
+    databaseManager = new DatabaseManager();
 
     if(ConfigManager::checkSystemDir())
     {
         configurationLoader->loadConfiguration();
         cookieJar->loadAllCookies();
+        if(!databaseManager->openConnection()) QMessageBox::warning(this, "Database Error", "A problem with database is detected: " + databaseManager->getError().text());
 
         downloadManager = new DownloadManager();
 
@@ -335,6 +337,9 @@ void MainWindow::showAbout()
     QHBoxLayout *mainL = new QHBoxLayout();
     QVBoxLayout *leftL = new QVBoxLayout();
     QVBoxLayout *rightL = new QVBoxLayout();
+
+    QLabel *dragonVersion = new QLabel(tr("Dragon version:\n") + ConfigManager::DragonVersion());
+    leftL->addWidget(dragonVersion);
 
     QLabel *builtDate = new QLabel(tr("Built date:\n") + QString::fromLocal8Bit(BUILDDATE) + " " + QString::fromLocal8Bit(BUILDTIME));
     leftL->addWidget(builtDate);
