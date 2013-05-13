@@ -100,9 +100,16 @@ bool ConfigManager::checkSystemDir()
 {
     #ifdef Q_OS_LINUX
 
-    if(QDir(DragonUserDirPath()).exists() == true) return true;
-    if(QDir().mkdir(DragonUserDirPath()) == true) return true;
-    else return false;
+    if(QDir(DragonUserDirPath()).exists() != true)
+        if(QDir().mkdir(DragonUserDirPath()) != true) return false;
+
+    if(QDir(DragonUserDirPath() + "/plugins").exists() != true)
+        if(QDir().mkdir(DragonUserDirPath() + "/plugins") != true) return false;
+
+    if(QDir(DragonUserDirPath() + "/icons").exists() != true)
+        if(QDir().mkdir(DragonUserDirPath() + "/icons") != true) return false;
+
+    return true;
 
     #endif
 }

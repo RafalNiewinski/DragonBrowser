@@ -216,6 +216,7 @@ void MainWindow::createConfigForNewStandardTab(tab *page)
     page->webView->page()->setNetworkAccessManager(nManager);
 
     connect(page, SIGNAL(chTitleSig(QWidget*,QString)), this, SLOT(tabName(QWidget*,QString)));
+    connect(page, SIGNAL(chIconSig(QWidget*,QIcon)), this, SLOT(tabIcon(QWidget*,QIcon)));
     connect(page, SIGNAL(downloadRequestSig(QNetworkRequest)), downloadManager, SLOT(startDownload(QNetworkRequest)));
     connect(page, SIGNAL(downloadRequestSig(QNetworkReply*)), downloadManager, SLOT(startDownload(QNetworkReply*)));
     connect(page, SIGNAL(openNewTab(QUrl)), this, SLOT(createTabWithUrl(QUrl)));
@@ -252,10 +253,15 @@ void MainWindow::setTitle(int id)
     setWindowTitle(title);
 }
 
-void MainWindow::tabName(QWidget* idw, QString title)
+void MainWindow::tabName(QWidget* id, QString title)
 {    
-    if(title.isNull()){ tab *tabwidget = (tab*)idw; title = tabwidget->webView->url().toString(); }
-    tabs->setTabText(tabs->indexOf(idw), title);
+    if(title.isNull()){ tab *tabwidget = (tab*)id; title = tabwidget->webView->url().toString(); }
+    tabs->setTabText(tabs->indexOf(id), title);
+}
+
+void MainWindow::tabIcon(QWidget *id, QIcon icon)
+{
+    tabs->setTabIcon(tabs->indexOf(id), icon);
 }
 
 void MainWindow::viewSource()//Pobiera kod zrodlowy

@@ -80,6 +80,7 @@ private slots:
     void newWindow();
     void setTitle(int id);
     void tabName(QWidget* id, QString title);
+    void tabIcon(QWidget* id, QIcon icon);
     void viewSource();
     void slotSourceDownloaded();
     void highlightAllLinks();

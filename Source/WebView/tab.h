@@ -48,20 +48,20 @@ private:
 
 signals:
     void chTitleSig(QWidget* wig, QString title);
+    void chIconSig(QWidget* wig, QIcon icon);
     void openNewTab(QUrl url);
     void downloadRequestSig(QNetworkRequest request);
     void downloadRequestSig(QNetworkReply *reply);
 
 public slots:
     void chTitle(QString title);
+    void chIcon();
     void downloadRequest(QNetworkReply *reply);
     void downloadRequset(QNetworkRequest request);
     void openLinkInNewTab();
 
     void newUrl();
     void urlChanged(QUrl url);
-    void changeIcon();
-    void titleChange(QString title);
     void statusBarMessage(QString message);
     void selectionChange();
     void loadStart();

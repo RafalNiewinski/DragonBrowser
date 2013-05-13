@@ -37,7 +37,8 @@ HEADERS += \
     WebView/mytabwidget.h \
     API/dragoninterface.h \
     API/dragonpluginmanager.h \
-    Config/databasemanager.h
+    Config/databasemanager.h \
+    WebView/mylineedit.h
 
 SOURCES += \
     Config/pages.cpp \
@@ -54,4 +55,5 @@ SOURCES += \
     WebView/mywebpage.cpp \
     WebView/mytabwidget.cpp \
     API/dragonpluginmanager.cpp \
-    Config/databasemanager.cpp
+    Config/databasemanager.cpp \
+    WebView/mylineedit.cpp

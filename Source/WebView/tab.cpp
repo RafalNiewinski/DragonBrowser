@@ -89,6 +89,9 @@ void tab::createSettings()
     webView->settings()->setAttribute(QWebSettings::FrameFlatteningEnabled, configLoader->FrameFlatteningEnabled);
     webView->settings()->setAttribute(QWebSettings::SiteSpecificQuirksEnabled, configLoader->SiteSpecificQuirksEnabled);
 
+    //DATABASE CATALOG PATH TO STORAGE FAVICONS
+    webView->settings()->setIconDatabasePath(configLoader->DragonUserDirPath() + "/icons");
+
     //webView->page()->settings()->setFontFamily(QWebSettings::StandardFont, "Arial");
     //webView->page()->settings()->setFontSize(QWebSettings::DefaultFontSize, 28);
 
@@ -105,6 +108,7 @@ void tab::createConnects()
     connect(webView, SIGNAL(urlChanged(QUrl)), this, SLOT(urlChanged(QUrl)));
     //connect(webView, SIGNAL(iconChanged()), this, SLOT(changeIcon()));
     connect(webView, SIGNAL(titleChanged(QString)), this, SLOT(chTitle(QString)));
+    connect(webView, SIGNAL(iconChanged()), this, SLOT(chIcon()));
     connect(webView, SIGNAL(statusBarMessage(QString)), this, SLOT(statusBarMessage(QString)));
     connect(webView, SIGNAL(selectionChanged()), this, SLOT(selectionChange()));
     connect(webView, SIGNAL(loadStarted()), this, SLOT(loadStart()));
@@ -121,7 +125,6 @@ void tab::urlChanged(QUrl url)
 {
     url.setUrl(webView->url().toString());
     urlAdress->setText(url.toString());
-    tab::changeIcon();
 }
 
 void tab::newUrl()
@@ -147,16 +150,6 @@ void tab::newUrl()
     adress = QString(GSEARCH_URL).arg(adress);
     url.setUrl(adress);
     webView->load(url);
-}
-
-void tab::changeIcon()
-{
-    setWindowIcon(QWebSettings::iconForUrl(webView->url().toString()));
-}
-
-void tab::titleChange(QString title)
-{
-    setWindowTitle(title);
 }
 
 void tab::statusBarMessage(QString message)
@@ -232,6 +225,11 @@ void tab::printPage(QWebFrame *frame)
 void tab::chTitle(QString title)
 {
     emit chTitleSig(this, title);
+}
+
+void tab::chIcon()
+{
+    emit chIconSig(this, webView->icon());
 }
 
 void tab::openLinkInNewTab()
