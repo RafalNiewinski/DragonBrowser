@@ -17,7 +17,7 @@ tab::~tab()
     delete webView;
     delete webPage;
     delete weblayout;
-    delete urlAdress;
+    delete urlAddress;
     delete toolBar;
     delete menulayout;
     delete layout;
@@ -34,10 +34,10 @@ void tab::createUi()
     weblayout = new QVBoxLayout();
     weblayout->setMargin(0);
 
-    urlAdress = new QLineEdit();
-    urlAdress->setText("");
+    urlAddress = new MyLineEdit();
+    urlAddress->setText("");
 
-    suggester = new GoogleSuggest(urlAdress);
+    suggester = new GoogleSuggest(urlAddress);
 
     url.setUrl("http://google.pl/");
 
@@ -52,7 +52,7 @@ void tab::createUi()
     toolBar->addAction(webView->pageAction(QWebPage::Forward));
     toolBar->addAction(webView->pageAction(QWebPage::Reload));
     toolBar->addAction(webView->pageAction(QWebPage::Stop));
-    toolBar->addWidget(urlAdress);
+    toolBar->addWidget(urlAddress);
     menulayout->addWidget(toolBar);
     layout->addLayout(menulayout);
 
@@ -104,7 +104,7 @@ void tab::createSettings()
 
 void tab::createConnects()
 {
-    connect(urlAdress, SIGNAL(returnPressed()), this, SLOT(newUrl()));
+    connect(urlAddress, SIGNAL(returnPressed()), this, SLOT(newUrl()));
     connect(webView, SIGNAL(urlChanged(QUrl)), this, SLOT(urlChanged(QUrl)));
     //connect(webView, SIGNAL(iconChanged()), this, SLOT(changeIcon()));
     connect(webView, SIGNAL(titleChanged(QString)), this, SLOT(chTitle(QString)));
@@ -124,13 +124,13 @@ void tab::createConnects()
 void tab::urlChanged(QUrl url)
 {
     url.setUrl(webView->url().toString());
-    urlAdress->setText(url.toString());
+    urlAddress->setText(url.toString());
 }
 
 void tab::newUrl()
-{
+{    
     QString adress;
-    adress = urlAdress->text();
+    adress = urlAddress->text();
 
     if(adress.indexOf(":", 1) != -1 && adress.indexOf(" ") == -1)
     {
@@ -164,17 +164,17 @@ void tab::selectionChange()
 
 void tab::loadStart()
 {
-
+    urlAddress->setProgress(0);
 }
 
 void tab::loadProgress(int progress)
 {
-    num.setNum(progress);
-    num +="%";
+    urlAddress->setProgress(progress);
 }
 
 void tab::loadFinish(bool ok)
 {
+    urlAddress->setProgress(100);
 }
 
 void tab::linkClick(QUrl url)

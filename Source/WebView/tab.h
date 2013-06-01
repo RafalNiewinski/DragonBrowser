@@ -13,6 +13,7 @@
 #include "Config/configmanager.h"
 #include "googlesuggest.h"
 #include "mywebpage.h"
+#include "mylineedit.h"
 
 class tab : public QWidget
 {
@@ -32,15 +33,12 @@ private:
 
     QToolBar *toolBar;
 
-    QLineEdit* urlAdress;
+    MyLineEdit* urlAddress;
     QUrl url;
 
     QPoint clickPos;
 
     GoogleSuggest *suggester;
-
-    //QLabel* status;
-    QString num; //dla slotu loadProgress(int progress)
 
     void createUi();
     void createSettings();
