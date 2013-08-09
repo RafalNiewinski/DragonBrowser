@@ -69,7 +69,12 @@ bool ConfigManager::loadConfiguration()
             if(argument == "StartupScreen") startAction = StartupScreen;
             if(argument == "HomePage") startAction = HomePage;
             if(argument == "RestorePages") startAction = RestorePages;
+            else startAction = StartupScreen;
         }
+
+        //HISTORY
+        if(command == "EnableHistory") this->EnableHistory = atoi(argument.c_str());
+
         }
 
 
@@ -81,6 +86,52 @@ bool ConfigManager::loadConfiguration()
     file->close();
 
     return true;
+}
+
+bool ConfigManager::saveConfiguration()
+{
+    file = new QFile(DragonUserDirPath() + "/config.cfg");
+    file->open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream out(file);
+
+    // HANDLING OF SETTINGS
+    {
+    out <<"AutoLoadImages = " <<QString::number(this->AutoLoadImages) <<"\n";
+    out <<"DnsPrefetchEnabled = " <<QString::number(this->DnsPrefetchEnabled) <<"\n";
+    out <<"JavascriptEnabled = " <<QString::number(this->JavascriptEnabled) <<"\n";
+    out <<"JavaEnabled = " <<QString::number(this->JavaEnabled) <<"\n";
+    out <<"PluginsEnabled = " <<QString::number(this->PluginsEnabled) <<"\n";
+    out <<"PrivateBrowsingEnabled = " <<QString::number(this->PrivateBrowsingEnabled) <<"\n";
+    out <<"JavascriptCanOpenWindows = " <<QString::number(this->JavascriptCanOpenWindows) <<"\n";
+    out <<"JavascriptCanAccessClipboard = " <<QString::number(this->JavascriptCanAccessClipboard) <<"\n";
+    out <<"DeveloperExtrasEnabled = " <<QString::number(this->DeveloperExtrasEnabled) <<"\n";
+    out <<"SpatialNavigationEnabled = " <<QString::number(this->SpatialNavigationEnabled) <<"\n";
+    out <<"LinksIncludedInFocusChain = " <<QString::number(this->LinksIncludedInFocusChain) <<"\n";
+    out <<"ZoomTextOnly = " <<QString::number(this->ZoomTextOnly) <<"\n";
+    out <<"PrintElementBackgrounds = " <<QString::number(this->PrintElementBackgrounds) <<"\n";
+    out <<"OfflineStorageDatabaseEnabled = " <<QString::number(this->OfflineStorageDatabaseEnabled) <<"\n";
+    out <<"OfflineWebApplicationCacheEnabled = " <<QString::number(this->OfflineWebApplicationCacheEnabled) <<"\n";
+    out <<"LocalStorageEnabled = " <<QString::number(this->LocalStorageEnabled) <<"\n";
+    out <<"LocalContentCanAccessRemoteUrls = " <<QString::number(this->LocalContentCanAccessRemoteUrls) <<"\n";
+    out <<"LocalContentCanAccessFileUrls = " <<QString::number(this->LocalContentCanAccessFileUrls) <<"\n";
+    out <<"XSSAuditingEnabled = " <<QString::number(this->XSSAuditingEnabled) <<"\n";
+    out <<"AcceleratedCompositingEnabled = " <<QString::number(this->AcceleratedCompositingEnabled) <<"\n";
+    out <<"TiledBackingStoreEnabled = " <<QString::number(this->TiledBackingStoreEnabled) <<"\n";
+    out <<"FrameFlatteningEnabled = " <<QString::number(this->FrameFlatteningEnabled) <<"\n";
+    out <<"SiteSpecificQuirksEnabled = " <<QString::number(this->SiteSpecificQuirksEnabled) <<"\n";
+
+    out <<"StartAction = ";
+    {
+        if(startAction == StartupScreen) out <<"StartupScreen";
+        if(startAction == HomePage) out <<"HomePage";
+        if(startAction == RestorePages) out <<"RestorePages";
+        out <<"\n";
+    }
+
+    //HISTORY
+    out <<"EnableHistory = " <<QString::number(this->EnableHistory) <<"\n";
+
+    }
 }
 
 QString ConfigManager::DragonVersion()

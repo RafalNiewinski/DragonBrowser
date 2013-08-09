@@ -2,10 +2,11 @@
 
 #define GSEARCH_URL "http://www.google.com/search?q=%1"
 
-tab::tab(QWidget *parent, ConfigManager *configM, MyWebPage* page) :  QWidget(parent)
+tab::tab(QWidget *parent, ConfigManager *configM, QAction *cloudAction, MyWebPage *page):  QWidget(parent)
 {
     configLoader = configM;
     webPage = page;
+    this->cloudAction = cloudAction;
 
     createUi();
     createSettings();
@@ -53,6 +54,7 @@ void tab::createUi()
     toolBar->addAction(webView->pageAction(QWebPage::Reload));
     toolBar->addAction(webView->pageAction(QWebPage::Stop));
     toolBar->addWidget(urlAddress);
+    //toolBar->addAction(cloudAction);
     menulayout->addWidget(toolBar);
     layout->addLayout(menulayout);
 
@@ -175,6 +177,8 @@ void tab::loadProgress(int progress)
 void tab::loadFinish(bool ok)
 {
     urlAddress->setProgress(100);
+
+    if(configLoader->EnableHistory) HistoryManager::addItem(webView->title(), webView->url());
 }
 
 void tab::linkClick(QUrl url)
@@ -219,6 +223,10 @@ void tab::printPage(QWebFrame *frame)
     dialog->deleteLater();
 }
 
+void tab::setCloudStateOnButton(CloudManager::CloudState state)
+{
+
+}
 
 //SIGNALS
 

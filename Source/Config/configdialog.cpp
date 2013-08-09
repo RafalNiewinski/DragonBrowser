@@ -7,6 +7,7 @@
 
 #include "configdialog.h"
 #include "pages.h"
+#include "Application/dragonbrowser.h"
 
 ConfigDialog::ConfigDialog()
 {
@@ -18,16 +19,16 @@ ConfigDialog::ConfigDialog()
     contentsWidget->setSpacing(12);
 
     pagesWidget = new QStackedWidget;
-    pagesWidget->addWidget(new ConfigurationPage);
+    pagesWidget->addWidget(new BasicPage);
     pagesWidget->addWidget(new UpdatePage);
     pagesWidget->addWidget(new QueryPage);
 
-    QPushButton *closeButton = new QPushButton(tr("Close"));
+    closeButton = new QPushButton(tr("Close"));
 
     createIcons();
     contentsWidget->setCurrentRow(0);
 
-    connect(closeButton, SIGNAL(clicked()), this, SLOT(close()));
+    connect(closeButton, SIGNAL(clicked()), this, SLOT(closeWindow()));
 
     QHBoxLayout *horizontalLayout = new QHBoxLayout;
     horizontalLayout->addWidget(contentsWidget);
@@ -79,3 +80,16 @@ void ConfigDialog::changePage(QListWidgetItem *current, QListWidgetItem *previou
 
     pagesWidget->setCurrentIndex(contentsWidget->row(current));
 }
+
+void ConfigDialog::closeWindow()
+{
+    dApp->getConfigManager()->saveConfiguration();
+    this->close();
+}
+
+void ConfigDialog::closeEvent(QCloseEvent *)
+{
+    closeWindow();
+}
+
+

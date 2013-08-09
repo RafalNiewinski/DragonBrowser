@@ -19,11 +19,18 @@ public:
 public slots:
     void changePage(QListWidgetItem *current, QListWidgetItem *previous);
 
+    virtual void closeEvent(QCloseEvent *);
+
+private slots:
+    void closeWindow();
+
 private:
     void createIcons();
 
     QListWidget *contentsWidget;
     QStackedWidget *pagesWidget;
+
+    QPushButton *closeButton;
 };
 
 #endif // CONFIGDIALOG_H

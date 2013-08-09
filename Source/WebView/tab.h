@@ -14,15 +14,19 @@
 #include "googlesuggest.h"
 #include "mywebpage.h"
 #include "mylineedit.h"
+#include "History/historymanager.h"
+#include "Cloud/clouddialog.h"
+#include "Cloud/cloudmanager.h"
 
 class tab : public QWidget
 {
     Q_OBJECT
 public:
-    tab(QWidget *parent = 0, ConfigManager *configM = NULL, MyWebPage *page = NULL);
+    tab(QWidget *parent = 0, ConfigManager *configM = NULL, QAction *cloudAction = NULL, MyWebPage *page = NULL);
     ~tab();
     QWebView* webView;
     MyWebPage *webPage;
+
 private:
 
     QVBoxLayout* layout;
@@ -30,6 +34,8 @@ private:
     QVBoxLayout* weblayout;
 
     ConfigManager *configLoader;
+
+    QAction *cloudAction;
 
     QToolBar *toolBar;
 
@@ -68,6 +74,7 @@ public slots:
     void linkClick(QUrl url);
     void contextMenuRequest(QPoint pos);
     void printPage(QWebFrame* frame);
+    void setCloudStateOnButton(CloudManager::CloudState state);
 };
 
 #endif // TAB_H

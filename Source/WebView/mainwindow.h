@@ -10,13 +10,10 @@
 
 #include <QtWebKit>
 #include "tab.h"
-#include "Config/configmanager.h"
-#include "Config/databasemanager.h"
-#include "Cookies/mycookiejar.h"
-#include "Download/downloadmanager.h"
+
 #include "authdialog.h"
 #include "mytabwidget.h"
-#include "API/dragonpluginmanager.h"
+#include "library.h"
 
 class MainWindow : public QMainWindow
 {
@@ -29,14 +26,6 @@ private:
     QWidget* centralWidget;
     QVBoxLayout* layout;
 
-    ConfigManager *configurationLoader;
-    DatabaseManager *databaseManager;
-
-    MyCookieJar *cookieJar;
-    QNetworkAccessManager *nManager;
-
-    DownloadManager *downloadManager;
-
     QMenu* filemenu;
     QAction* newTabAction;
     QAction* closeTabAction;
@@ -48,9 +37,20 @@ private:
     QMenu *viewMenu;
     QAction* viewSourceAction;
 
+    QMenu* historyMenu;
+    QAction* historyManagerAction;
+
     QMenu *toolsMenu;
     QAction *downloadManagerAction;
     QAction *preferencesAction;
+
+    QMenu *cloudMenu;
+    //STATUS NONE
+    QAction *cloudConnectAction;
+    //STATUS OK, FAIL, SYNC
+    QAction *cloudDisplayStatusAction;
+    QAction *manageCloudAction;
+    QAction *disconnectCloudAction;
 
     QMenu *helpMenu;
     QAction *aboutAction;
@@ -58,9 +58,7 @@ private:
     MyTabWidget* tabs;
     QToolButton* addTabButton;
 
-    QAuthenticator *authenticator;
-
-    DragonPluginManager *pluginManager;
+    QAction *cloudAction;
 
     void createFileActions();
     void createMenus();
@@ -71,7 +69,6 @@ public slots:
     void createCustomTab(QWidget* widget, QString title);
     void createPluginTab(QWidget* plugin, QString title);
 
-private slots:
     void saveAsImage();
     tab* createStandardTab();
     void createTabWithUrl(QUrl url);
@@ -87,18 +84,19 @@ private slots:
     void removeObjectElements();
     void removeEmbeddedElements();
     void openPreferences();
-    void exitApplication();
+    void exitWindow();
     virtual void closeEvent(QCloseEvent *);
     virtual void resizeEvent(QResizeEvent *);
     void showAbout();
     void showDownloadManager();
-    void authorizationRequest(QNetworkReply* reply,QAuthenticator* auth);
-    void authorizationConfirm(QString user, QString password);
+    void showLibraryHistory();
     void printRequest();
     void openNewTabFromPage(MyWebPage* definiedPage);
     void createConfigForNewStandardTab(tab* page);
     bool saveSession();
     bool restoreSession();
+    void cloudStatusChanged(CloudManager::CloudState state);
+    void cloudActionCalled();
 
 };
 

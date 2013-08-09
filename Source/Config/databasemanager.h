@@ -13,6 +13,7 @@ public:
     bool openConnection();
     QSqlError getError();
     QSqlQuery execute(QString query);
+    QSqlDatabase getDatabase();
 
 private:
     QSqlDatabase database;

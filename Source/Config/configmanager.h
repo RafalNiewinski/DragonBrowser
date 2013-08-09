@@ -19,6 +19,7 @@ public:
 
     QFile *file;
 
+    //OPTIONS//
     StartAction startAction;
     QString homeAddress;
 
@@ -47,7 +48,12 @@ public:
     bool FrameFlatteningEnabled;
     bool SiteSpecificQuirksEnabled;
 
+    //History
+    bool EnableHistory;
+    //OPTIONS//
+
     bool loadConfiguration();
+    bool saveConfiguration();
 
     static QString DragonVersion();
 

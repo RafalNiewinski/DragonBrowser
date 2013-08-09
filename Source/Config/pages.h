@@ -2,11 +2,20 @@
 #define PAGES_H
 
 #include <QWidget>
+#include <QtGui>
 
-class ConfigurationPage : public QWidget
+class BasicPage : public QWidget
 {
 public:
-    ConfigurationPage(QWidget *parent = 0);
+    BasicPage(QWidget *parent = 0);
+
+private slots:
+    void startComboChanged(int i);
+    void homeUrlChanged();
+
+private:
+    QComboBox *startCombo;
+    QLineEdit *startPageEdit;
 };
 
 class QueryPage : public QWidget

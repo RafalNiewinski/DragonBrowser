@@ -4,19 +4,12 @@
 #include <QtGlobal>
 #include "tab.h"
 #include "Config/configdialog.h"
+#include "Application/dragonbrowser.h"
 
 MainWindow::MainWindow()
 {
-    #if QT_VERSION >= 0x050000
-            qApp->setStyle("fusion");
-    #else
-            QTextCodec::setCodecForTr (QTextCodec::codecForName ("UTF-8")); // QT5 default encoding UTF-8
-            QApplication::setStyle(new QPlastiqueStyle); //QT5 do not have trash styles
-    #endif
-
-
     setWindowTitle("Dragon Web Browser Alpha");
-    //setWindowIcon(QIcon("/path/window_icon.png"));
+    setWindowIcon(QIcon("/path/window_icon.png"));
 
     createFileActions();
     createMenus();
@@ -24,7 +17,7 @@ MainWindow::MainWindow()
     createConnects();
 
     setMinimumSize(160, 160);
-    this->showMaximized();
+    //this->showMaximized();
 }
 
 void MainWindow::createFileActions()
@@ -50,16 +43,27 @@ void MainWindow::createFileActions()
 
     quitAction = new QAction(tr("Quit"), this);
     quitAction->setShortcut(Qt::CTRL + Qt::Key_Q);
-    connect(quitAction, SIGNAL(triggered()), this, SLOT(exitApplication()));
+    connect(quitAction, SIGNAL(triggered()), this, SLOT(exitWindow()));
 
     viewSourceAction = new QAction(tr("Source code"), this);
     connect(viewSourceAction, SIGNAL(triggered()), SLOT(viewSource()));
+
+    historyManagerAction = new QAction(tr("History manager"), this);
+    connect(historyManagerAction, SIGNAL(triggered()), this, SLOT(showLibraryHistory()));
 
     downloadManagerAction = new QAction(tr("Download manager"), this);
     connect(downloadManagerAction, SIGNAL(triggered()), this, SLOT(showDownloadManager()));
 
     preferencesAction = new QAction(tr("Preferences"), this);
     connect(preferencesAction, SIGNAL(triggered()), this, SLOT(openPreferences()));
+
+    cloudConnectAction = new QAction(tr("Cloud"), this);
+
+    cloudDisplayStatusAction = new QAction(tr("Status"), this);
+
+    manageCloudAction = new QAction(tr("Manage cloud"), this);
+
+    disconnectCloudAction = new QAction(tr("Disconnect from cloud"), this);
 
     aboutAction = new QAction(tr("About"), this);
     connect(aboutAction, SIGNAL(triggered()), this, SLOT(showAbout()));
@@ -81,10 +85,14 @@ void MainWindow::createMenus()
     viewMenu = new QMenu(tr("View"), this);
     menuBar()->addMenu(viewMenu);
     viewMenu->addAction(viewSourceAction);
-    viewMenu->addSeparator();
-    viewMenu->addAction(tr("Highlight all links"), this, SLOT(highlightAllLinks()));
-    viewMenu->addAction(tr("Remove all object elements"), this, SLOT(removeObjectElements()));
-    viewMenu->addAction(tr("Remove all embedded elements"), this, SLOT(removeEmbeddedElements()));
+    //viewMenu->addSeparator();
+    //viewMenu->addAction(tr("Highlight all links"), this, SLOT(highlightAllLinks()));
+    //viewMenu->addAction(tr("Remove all object elements"), this, SLOT(removeObjectElements()));
+    //viewMenu->addAction(tr("Remove all embedded elements"), this, SLOT(removeEmbeddedElements()));
+
+    historyMenu = new QMenu(tr("History"), this);
+    menuBar()->addMenu(historyMenu);
+    historyMenu->addAction(historyManagerAction);
 
     toolsMenu = new QMenu(tr("Tools"), this);
     menuBar()->addMenu(toolsMenu);
@@ -92,6 +100,8 @@ void MainWindow::createMenus()
     toolsMenu->addSeparator();
     toolsMenu->addAction(preferencesAction);
 
+    cloudMenu = new QMenu(tr("Cloud"), this);
+    //generateCloudMenuActions();
 
     helpMenu = new QMenu(tr("Help"), this);
     menuBar()->addMenu(helpMenu);
@@ -124,35 +134,8 @@ void MainWindow::createUi()
 
     layout->addWidget(tabs);
 
-    cookieJar = new MyCookieJar();
-    nManager = new QNetworkAccessManager();
-    nManager->setCookieJar(cookieJar);
 
-    configurationLoader = new ConfigManager();
-    databaseManager = new DatabaseManager();
-
-    if(ConfigManager::checkSystemDir())
-    {
-        configurationLoader->loadConfiguration();
-        cookieJar->loadAllCookies();
-        if(!databaseManager->openConnection()) QMessageBox::warning(this, "Database Error", "A problem with database is detected: " + databaseManager->getError().text());
-
-        downloadManager = new DownloadManager();
-
-        if(configurationLoader->startAction == RestorePages) restoreSession();
-        else createStandardTab();
-    }
-    else
-    {
-        downloadManager = new DownloadManager();
-        createStandardTab();
-
-        QMessageBox::warning(this, "Profile Directory Error", tr("A problem with creating a user profile directory.\nIf not solved all your data such as configuration can not be saved. \nMake sure that the Dragon has permission to write to the user's home directory."));
-    }
-
-    pluginManager = new DragonPluginManager();
-    pluginManager->searchPlugins();
-
+    cloudAction = new QAction(QIcon(qApp->applicationDirPath() + "/Content/ICONS/cloud.png"), "", this);
 }
 
 void MainWindow::createConnects()
@@ -161,7 +144,7 @@ void MainWindow::createConnects()
     connect(addTabButton, SIGNAL(clicked()), this, SLOT(createStandardTab()));
     connect(tabs, SIGNAL(tabCloseRequested(int)), this, SLOT(deleteTab(int)));
     connect(tabs, SIGNAL(currentChanged(int)), this, SLOT(setTitle(int)));
-    connect(nManager, SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)), this, SLOT(authorizationRequest(QNetworkReply*,QAuthenticator*)));
+    connect(cloudAction, SIGNAL(triggered()), this, SLOT(cloudActionCalled()));
 }
 
 void MainWindow::saveAsImage()
@@ -184,7 +167,7 @@ void MainWindow::saveAsImage()
 tab* MainWindow::createStandardTab()
 {
     tab* page;
-    page = new tab(0, configurationLoader);
+    page = new tab(0, dApp->getConfigManager(), cloudAction);
     tabs->addTab(page, "Blank tab");
     createConfigForNewStandardTab(page);
 
@@ -200,7 +183,7 @@ void MainWindow::createTabWithUrl(QUrl url)
 void MainWindow::openNewTabFromPage(MyWebPage *definiedPage)
 {
     tab* page;
-    page = new tab(0, configurationLoader, definiedPage);
+    page = new tab(0, dApp->getConfigManager(), cloudAction, definiedPage);
     tabs->addTab(page, "Blank tab");
     createConfigForNewStandardTab(page);
 }
@@ -213,12 +196,12 @@ void MainWindow::createPluginTab(QWidget *plugin, QString title)
 
 void MainWindow::createConfigForNewStandardTab(tab *page)
 {
-    page->webView->page()->setNetworkAccessManager(nManager);
+    page->webView->page()->setNetworkAccessManager(dApp->getNetworkAccessManager());
 
     connect(page, SIGNAL(chTitleSig(QWidget*,QString)), this, SLOT(tabName(QWidget*,QString)));
     connect(page, SIGNAL(chIconSig(QWidget*,QIcon)), this, SLOT(tabIcon(QWidget*,QIcon)));
-    connect(page, SIGNAL(downloadRequestSig(QNetworkRequest)), downloadManager, SLOT(startDownload(QNetworkRequest)));
-    connect(page, SIGNAL(downloadRequestSig(QNetworkReply*)), downloadManager, SLOT(startDownload(QNetworkReply*)));
+    connect(page, SIGNAL(downloadRequestSig(QNetworkRequest)), dApp->getDownloadManager(), SLOT(startDownload(QNetworkRequest)));
+    connect(page, SIGNAL(downloadRequestSig(QNetworkReply*)), dApp->getDownloadManager(), SLOT(startDownload(QNetworkReply*)));
     connect(page, SIGNAL(openNewTab(QUrl)), this, SLOT(createTabWithUrl(QUrl)));
     connect(page->webPage, SIGNAL(newTabFromPage(MyWebPage*)), this, SLOT(openNewTabFromPage(MyWebPage*)));
     tabs->setCurrentIndex(tabs->indexOf(page));
@@ -226,7 +209,7 @@ void MainWindow::createConfigForNewStandardTab(tab *page)
 
 void MainWindow::deleteTab(int index)
 {
-    if(tabs->count() == 1) exitApplication();
+    if(tabs->count() == 1) exitWindow();
     else
     {
         QWidget *tabwidget = tabs->widget(index);
@@ -241,7 +224,9 @@ void MainWindow::deleteCurrentTab()
 }
 
 void MainWindow::newWindow()
-{}
+{
+    dApp->newWindow();
+}
 
 void MainWindow::setTitle(int id)
 {
@@ -310,24 +295,14 @@ void MainWindow::openPreferences()
     config.exec();
 }
 
-void MainWindow::exitApplication()
+void MainWindow::exitWindow()
 {
-    if(ConfigManager::checkSystemDir())
-    {
-        cookieJar->saveAllCookies();
-        saveSession();
-    }
-    else
-    {
-        QMessageBox::warning(this, "Profile Directory Error", tr("A problem with creating a user profile directory.\nYour personal settings will not be saved until it's fixed.\n\n\nMake sure that the Dragon has permission to write to the user's home directory."));
-    }
-
-    QApplication::exit(0);
+    ///TODO, NOT WORKING
 }
 
 void MainWindow::closeEvent(QCloseEvent *)
 {
-    exitApplication();
+    exitWindow();
 }
 
 void MainWindow::resizeEvent(QResizeEvent *)
@@ -377,23 +352,13 @@ void MainWindow::showAbout()
 
 void MainWindow::showDownloadManager()
 {
-    downloadManager->show();
+    dApp->getDownloadManager()->show();
 }
 
-void MainWindow::authorizationRequest(QNetworkReply *reply, QAuthenticator *auth)
+void MainWindow::showLibraryHistory()
 {
-    Q_UNUSED(reply);
-
-    authenticator = auth;
-    AuthDialog *dialog = new AuthDialog();
-    connect(dialog, SIGNAL(authConfirm(QString,QString)), this, SLOT(authorizationConfirm(QString,QString)));
-    dialog->exec();
-}
-
-void MainWindow::authorizationConfirm(QString user, QString password)
-{
-    authenticator->setUser(user);
-    authenticator->setPassword(password);
+    Library *lib = new Library(2);
+    lib->show();
 }
 
 void MainWindow::printRequest()
@@ -404,7 +369,7 @@ void MainWindow::printRequest()
 
 bool MainWindow::saveSession()
 {
-    if(configurationLoader->saveSessionData(tabs->generateAllOpenTabUrls()))
+    if(dApp->getConfigManager()->saveSessionData(tabs->generateAllOpenTabUrls()))
         return true;
     else
         return false;
@@ -412,7 +377,7 @@ bool MainWindow::saveSession()
 
 bool MainWindow::restoreSession()
 {
-    QList<QString> *urls = configurationLoader->restoreSessionData();
+    QList<QString> *urls = dApp->getConfigManager()->restoreSessionData();
 
     for(int i=0; i < urls->count(); i++)
     {
@@ -422,4 +387,13 @@ bool MainWindow::restoreSession()
     return true;
 }
 
+void MainWindow::cloudStatusChanged(CloudManager::CloudState state)
+{
 
+}
+
+void MainWindow::cloudActionCalled()
+{
+    CloudDialog *dialog = new CloudDialog();
+    dialog->exec();
+}

@@ -4,6 +4,7 @@
 #
 #-------------------------------------------------
 
+include(3rdParty\qtsingleapplication\src\qtsingleapplication.pri)
 
 contains(QT_VERSION, 4.6)
 {
@@ -38,7 +39,16 @@ HEADERS += \
     API/dragoninterface.h \
     API/dragonpluginmanager.h \
     Config/databasemanager.h \
-    WebView/mylineedit.h
+    WebView/mylineedit.h \
+    History/historymanager.h \
+    3rdParty/fancytabwidget.h \
+    3rdParty/stylehelper.h \
+    WebView/library.h \
+    History/historywidget.h \
+    History/historyview.h \
+    Cloud/cloudmanager.h \
+    Cloud/clouddialog.h \
+    Application/dragonbrowser.h
 
 SOURCES += \
     Config/pages.cpp \
@@ -56,4 +66,13 @@ SOURCES += \
     WebView/mytabwidget.cpp \
     API/dragonpluginmanager.cpp \
     Config/databasemanager.cpp \
-    WebView/mylineedit.cpp
+    WebView/mylineedit.cpp \
+    History/historymanager.cpp \
+    3rdParty/fancytabwidget.cpp \
+    3rdParty/stylehelper.cpp \
+    WebView/library.cpp \
+    History/historywidget.cpp \
+    History/historyview.cpp \
+    Cloud/cloudmanager.cpp \
+    Cloud/clouddialog.cpp \
+    Application/dragonbrowser.cpp

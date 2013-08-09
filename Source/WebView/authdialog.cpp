@@ -16,7 +16,7 @@ AuthDialog::AuthDialog()
     passLabel = new QLabel(tr("Password:"));
     passLayout->addWidget(passLabel);
     passLine = new QLineEdit();
-    //passLine->setInputMask("*");
+    passLine->setEchoMode(QLineEdit::Password);
     passLayout->addWidget(passLine);
     mainLayout->addLayout(passLayout);
 
