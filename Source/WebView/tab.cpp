@@ -75,6 +75,7 @@ void tab::createSettings()
     webView->settings()->setAttribute(QWebSettings::PluginsEnabled, configLoader->getOption("PluginsEnabled").toBool());
     webView->settings()->setAttribute(QWebSettings::PrivateBrowsingEnabled, configLoader->getOption("PrivateBrowsingEnabled").toBool());
     webView->settings()->setAttribute(QWebSettings::JavascriptCanOpenWindows, configLoader->getOption("JavascriptCanOpenWindows").toBool());
+    webView->settings()->setAttribute(QWebSettings::JavascriptCanCloseWindows, configLoader->getOption("JavascriptCanCloseWindows").toBool());
     webView->settings()->setAttribute(QWebSettings::JavascriptCanAccessClipboard, configLoader->getOption("JavascriptCanAccessClipboard").toBool());
     webView->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, configLoader->getOption("DeveloperExtrasEnabled").toBool());
     webView->settings()->setAttribute(QWebSettings::SpatialNavigationEnabled, configLoader->getOption("SpatialNavigationEnabled").toBool());
@@ -91,6 +92,9 @@ void tab::createSettings()
     webView->settings()->setAttribute(QWebSettings::TiledBackingStoreEnabled, configLoader->getOption("TiledBackingStoreEnabled").toBool());
     webView->settings()->setAttribute(QWebSettings::FrameFlatteningEnabled, configLoader->getOption("FrameFlatteningEnabled").toBool());
     webView->settings()->setAttribute(QWebSettings::SiteSpecificQuirksEnabled, configLoader->getOption("SiteSpecificQuirksEnabled").toBool());
+    webView->settings()->setAttribute(QWebSettings::ScrollAnimatorEnabled, configLoader->getOption("ScrollAnimatorEnabled").toBool());
+    webView->settings()->setAttribute(QWebSettings::CaretBrowsingEnabled, configLoader->getOption("CaretBrowsingEnabled").toBool());
+    webView->settings()->setAttribute(QWebSettings::NotificationsEnabled, configLoader->getOption("NotificationsEnabled").toBool());
 
     //DATABASE CATALOG PATH TO STORAGE FAVICONS
     webView->settings()->setIconDatabasePath(configLoader->DragonUserDirPath() + "/icons");

@@ -37,6 +37,7 @@ bool ConfigManager::loadDefaults()
     setOption("PluginsEnabled", true);
     setOption("PrivateBrowsingEnabled", false);
     setOption("JavascriptCanOpenWindows", true);
+    setOption("JavascriptCanCloseWindows", true);
     setOption("JavascriptCanAccessClipboard", true);
     setOption("DeveloperExtrasEnabled", true);
     setOption("SpatialNavigationEnabled", false);
@@ -53,6 +54,9 @@ bool ConfigManager::loadDefaults()
     setOption("TiledBackingStoreEnabled", false);
     setOption("FrameFlatteningEnabled", false);
     setOption("SiteSpecificQuirksEnabled", true);
+    setOption("ScrollAnimatorEnabled", false);
+    setOption("CaretBrowsingEnabled", false);
+    setOption("NotificationsEnabled", true);
 
     ///////////////////////////////////////////////////////////////
 
