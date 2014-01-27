@@ -1,9 +1,12 @@
 #ifndef LIBRARY_H
 #define LIBRARY_H
 
+#include <QApplication>
 #include <QWidget>
 #include <QMainWindow>
 #include <QtGui>
+#include <QVBoxLayout>
+#include <QDesktopWidget>
 
 #include "3rdParty/fancytabwidget.h"
 #include "History/historywidget.h"

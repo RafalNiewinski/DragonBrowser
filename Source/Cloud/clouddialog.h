@@ -3,8 +3,10 @@
 
 #include <QDialog>
 #include <QtGui>
-
-
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QLineEdit>
 
 class CloudDialog : public QDialog
 {

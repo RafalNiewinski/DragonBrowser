@@ -1,17 +1,17 @@
 /****************************************************************************
-** 
+**
 ** Copyright (c) 2009 Nokia Corporation and/or its subsidiary(-ies).
 ** All rights reserved.
 ** Contact: Nokia Corporation (qt-info@nokia.com)
-** 
+**
 ** This file is part of a Qt Solutions component.
 **
-** Commercial Usage  
+** Commercial Usage
 ** Licensees holding valid Qt Commercial licenses may use this file in
 ** accordance with the Qt Solutions Commercial License Agreement provided
 ** with the Software or, alternatively, in accordance with the terms
 ** contained in a written agreement between you and Nokia.
-** 
+**
 ** GNU Lesser General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU Lesser
 ** General Public License version 2.1 as published by the Free Software
@@ -19,69 +19,84 @@
 ** packaging of this file.  Please review the following information to
 ** ensure the GNU Lesser General Public License version 2.1 requirements
 ** will be met: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html.
-** 
+**
 ** In addition, as a special exception, Nokia gives you certain
 ** additional rights. These rights are described in the Nokia Qt LGPL
 ** Exception version 1.1, included in the file LGPL_EXCEPTION.txt in this
 ** package.
-** 
-** GNU General Public License Usage 
+**
+** GNU General Public License Usage
 ** Alternatively, this file may be used under the terms of the GNU
 ** General Public License version 3.0 as published by the Free Software
 ** Foundation and appearing in the file LICENSE.GPL included in the
 ** packaging of this file.  Please review the following information to
 ** ensure the GNU General Public License version 3.0 requirements will be
 ** met: http://www.gnu.org/copyleft/gpl.html.
-** 
+**
 ** Please note Third Party Software included with Qt Solutions may impose
 ** additional restrictions and it is the user's responsibility to ensure
 ** that they have met the licensing requirements of the GPL, LGPL, or Qt
 ** Solutions Commercial license and the relevant license of the Third
 ** Party Software they are using.
-** 
+**
 ** If you are unsure which license is appropriate for your use, please
 ** contact Nokia at qt-info@nokia.com.
-** 
+**
 ****************************************************************************/
 
-/*! \page qtsingleapplication-example-loader.html
-    \title Loading Documents
 
-    The application in this example loads or prints the documents 
-    passed as commandline parameters to further instances of this
-    application.
+#include <QApplication>
 
-    \quotefromfile loader/main.cpp
-    \printuntil };
-    The user interface in this application is a QMainWindow subclass
-    with a QMdiArea as the central widget. It implements a slot
-    \c handleMessage() that will be connected to the messageReceived()
-    signal of the QtSingleApplication class.
+class QtLocalPeer;
 
-    \printuntil }
-    The MainWindow constructor creates a minimal user interface.
+#if defined(Q_OS_WIN)
+#  if !defined(QT_QTSINGLEAPPLICATION_EXPORT) && !defined(QT_QTSINGLEAPPLICATION_IMPORT)
+#    define QT_QTSINGLEAPPLICATION_EXPORT
+#  elif defined(QT_QTSINGLEAPPLICATION_IMPORT)
+#    if defined(QT_QTSINGLEAPPLICATION_EXPORT)
+#      undef QT_QTSINGLEAPPLICATION_EXPORT
+#    endif
+#    define QT_QTSINGLEAPPLICATION_EXPORT __declspec(dllimport)
+#  elif defined(QT_QTSINGLEAPPLICATION_EXPORT)
+#    undef QT_QTSINGLEAPPLICATION_EXPORT
+#    define QT_QTSINGLEAPPLICATION_EXPORT __declspec(dllexport)
+#  endif
+#else
+#  define QT_QTSINGLEAPPLICATION_EXPORT
+#endif
 
-    \printto case Print:
-    The handleMessage() slot interprets the message passed in as a
-    filename that can be prepended with \e /print to indicate that
-    the file should just be printed rather than loaded.
+class QT_QTSINGLEAPPLICATION_EXPORT QtSingleApplication : public QApplication
+{
+    Q_OBJECT
 
-    \printto #include
-    Loading the file will also activate the window.
+public:
+    QtSingleApplication(int &argc, char** argv, bool GUIenabled = true);
+    QtSingleApplication(const QString &id, int &argc, char** argv);
 
-    \printto mw
-    The \c main entry point function creates a QtSingleApplication
-    object, and creates a message to send to a running instance
-    of the application. If the message was sent successfully the
-    process exits immediately.
+    bool isRunning();
+    void setAppId(const QString &id);
+    QString id() const;
 
-    \printuntil }
-    If the message could not be sent the application starts up.  Note
-    that \c false is passed to the call to setActivationWindow() to
-    prevent automatic activation for every message received, e.g. when
-    the application should just print a file. Instead, the message
-    handling function determines whether activation is requested, and
-    signals that by emitting the needToShow() signal. This is then
-    simply connected directly to QtSingleApplication's
-    activateWindow() slot.
-*/
+    void setActivationWindow(QWidget* aw, bool activateOnMessage = true);
+    QWidget* activationWindow() const;
+
+    // Obsolete:
+    void initialize(bool dummy = true)
+    { isRunning(); Q_UNUSED(dummy) }
+
+    void removeLockFile();
+
+public Q_SLOTS:
+    bool sendMessage(const QString &message, int timeout = 5000);
+    void activateWindow();
+
+
+Q_SIGNALS:
+    void messageReceived(const QString &message);
+
+
+private:
+    void sysInit(const QString &appId = QString());
+    QtLocalPeer* peer;
+    QWidget* actWin;
+};

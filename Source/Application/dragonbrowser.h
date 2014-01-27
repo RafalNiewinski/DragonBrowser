@@ -4,7 +4,7 @@
 #define dApp DragonBrowser::getInstance()
 
 #include <QApplication>
-#include "3rdParty/qtsingleapplication/src/qtsingleapplication.h"
+#include "3rdParty/qtsingleapplication/qtsingleapplication.h"
 
 #include <QList>
 #include <QPointer>
@@ -33,6 +33,7 @@ public:
     void exitApplication();
 
     MainWindow* newWindow(QUrl url = QUrl());
+    bool removeWindow(MainWindow* window);
 
     ConfigManager* getConfigManager()                   { return configurationLoader; }
     DatabaseManager* getDatabaseManager()               { return databaseManager; }

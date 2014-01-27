@@ -297,7 +297,7 @@ void MainWindow::openPreferences()
 
 void MainWindow::exitWindow()
 {
-    ///TODO, NOT WORKING
+    dApp->removeWindow(this);
 }
 
 void MainWindow::closeEvent(QCloseEvent *)

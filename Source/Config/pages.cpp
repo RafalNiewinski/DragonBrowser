@@ -18,9 +18,9 @@ BasicPage::BasicPage(QWidget *parent) : QWidget(parent)
     startCombo->addItem(tr("Run the startup screen"));
     startCombo->addItem(tr("Start your homepage"));
     startCombo->addItem(tr("Restore last open tabs"));
-    if(dApp->getConfigManager()->startAction == StartupScreen) startCombo->setCurrentIndex(0);
-    else if(dApp->getConfigManager()->startAction == HomePage) startCombo->setCurrentIndex(1);
-    else startCombo->setCurrentIndex(2);
+    //if(dApp->getConfigManager()->startAction == StartupScreen) startCombo->setCurrentIndex(0);
+    //else if(dApp->getConfigManager()->startAction == HomePage) startCombo->setCurrentIndex(1);
+    //else startCombo->setCurrentIndex(2);
     QHBoxLayout *startOptionLayout = new QHBoxLayout;
     startOptionLayout->addWidget(startLabel);
     startOptionLayout->addWidget(startCombo);
@@ -45,9 +45,9 @@ BasicPage::BasicPage(QWidget *parent) : QWidget(parent)
 
 void BasicPage::startComboChanged(int i)
 {
-    if(i == 0) dApp->getConfigManager()->startAction = StartupScreen;
-    else if(i == 1) dApp->getConfigManager()->startAction = HomePage;
-    else dApp->getConfigManager()->startAction = RestorePages;
+    //if(i == 0) dApp->getConfigManager()->startAction = StartupScreen;
+    //else if(i == 1) dApp->getConfigManager()->startAction = HomePage;
+    //else dApp->getConfigManager()->startAction = RestorePages;
 }
 
 void BasicPage::homeUrlChanged()

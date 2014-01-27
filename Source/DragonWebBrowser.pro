@@ -4,8 +4,6 @@
 #
 #-------------------------------------------------
 
-include(3rdParty\qtsingleapplication\src\qtsingleapplication.pri)
-
 contains(QT_VERSION, 4.6)
 {
     QT       += core gui network webkit sql
@@ -48,7 +46,11 @@ HEADERS += \
     History/historyview.h \
     Cloud/cloudmanager.h \
     Cloud/clouddialog.h \
-    Application/dragonbrowser.h
+    Application/dragonbrowser.h \
+    3rdParty/qtsingleapplication/qtlockedfile.h \
+    3rdParty/qtsingleapplication/qtsinglecoreapplication.h \
+    3rdParty/qtsingleapplication/qtsingleapplication.h \
+    3rdParty/qtsingleapplication/qtlocalpeer.h
 
 SOURCES += \
     Config/pages.cpp \
@@ -75,4 +77,9 @@ SOURCES += \
     History/historyview.cpp \
     Cloud/cloudmanager.cpp \
     Cloud/clouddialog.cpp \
-    Application/dragonbrowser.cpp
+    Application/dragonbrowser.cpp \
+    3rdParty/qtsingleapplication/qtlockedfile_win.cpp \
+    3rdParty/qtsingleapplication/qtlockedfile_unix.cpp \
+    3rdParty/qtsingleapplication/qtlockedfile.cpp \
+    3rdParty/qtsingleapplication/qtsingleapplication.cpp \
+    3rdParty/qtsingleapplication/qtlocalpeer.cpp

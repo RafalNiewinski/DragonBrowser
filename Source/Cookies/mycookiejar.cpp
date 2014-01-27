@@ -67,7 +67,7 @@ bool MyCookieJar::loadAllCookies()
 {
     QFile file(ConfigManager::DragonUserDirPath() + "/cookies.jar");
 
-    if(file.open(QIODevice::ReadOnly) != true) return true;
+    if(!file.open(QIODevice::ReadOnly)) return false;
     QTextStream st(&file);
 
     QList<QNetworkCookie> list;

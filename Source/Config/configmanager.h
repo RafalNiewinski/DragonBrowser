@@ -4,6 +4,7 @@
 #include <QtWebKit>
 #include <QtNetwork>
 #include <QFile>
+#include <QSettings>
 
 enum StartAction
 {
@@ -20,7 +21,6 @@ public:
     QFile *file;
 
     //OPTIONS//
-    StartAction startAction;
     QString homeAddress;
 
     //WebKit Options
@@ -54,6 +54,9 @@ public:
 
     bool loadConfiguration();
     bool saveConfiguration();
+    bool loadDefaults();
+    QVariant getOption(QString key);
+    void setOption(QString key, QVariant value);
 
     static QString DragonVersion();
 
@@ -63,6 +66,9 @@ public:
 
     bool saveSessionData(QList<QString>* urls);
     QList<QString>* restoreSessionData();
+
+private:
+    QSettings *settings;
 };
 
 #endif // CONFIGMANAGER_H

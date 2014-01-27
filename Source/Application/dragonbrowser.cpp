@@ -35,15 +35,15 @@ DragonBrowser::DragonBrowser(int &argc, char** argv) : QtSingleApplication(argc,
 
     if(ConfigManager::checkSystemDir())
     {
-        configurationLoader->loadConfiguration();
-        cookieJar->loadAllCookies();
+        if(!configurationLoader->loadConfiguration()) QMessageBox::warning(mainWindows.last().data(), ("Configuration Error"), ("Loading your browser settings failed. Loaded default settings."));
+        if(!cookieJar->loadAllCookies()) QMessageBox::warning(mainWindows.last().data(), ("Cookies Error"), ("Loading cookies failed. The browser will work without them."));
         if(!databaseManager->openConnection()) QMessageBox::warning(mainWindows.last().data(), ("Database Error"), ("A problem with database is detected: " + databaseManager->getError().text()));
 
         downloadManager = new DownloadManager();
 
         pluginManager->searchPlugins();
 
-        if(configurationLoader->startAction == RestorePages) mainWindows.last().data()->restoreSession();
+        if(configurationLoader->getOption("StartAction") == "RestoreSession") mainWindows.last().data()->restoreSession();
         else mainWindows.last().data()->createStandardTab();
     }
     else
@@ -85,6 +85,12 @@ MainWindow* DragonBrowser::newWindow(QUrl url)
     return window;
 }
 
+bool DragonBrowser::removeWindow(MainWindow *window)
+{
+    if(mainWindows.count() == 1) exitApplication();
+    return mainWindows.removeOne(window);
+}
+
 void DragonBrowser::parameterFromAnotherProcess(QString parameter)
 {
     if(!parameter.isEmpty()) mainWindows.last().data()->createTabWithUrl(QUrl(parameter));
@@ -95,16 +101,14 @@ void DragonBrowser::exitApplication()
     if(ConfigManager::checkSystemDir())
     {
         cookieJar->saveAllCookies();
-        //saveSession();
+        mainWindows.last().data()->saveSession();
     }
     else
     {
         QMessageBox::warning(mainWindows.last().data(), "Profile Directory Error", tr("A problem with creating a user profile directory.\nYour personal settings will not be saved until it's fixed.\n\n\nMake sure that the Dragon has permission to write to the user's home directory."));
     }
-    QMessageBox::warning(mainWindows.last().data(), "Profile Directory Error", tr("A problem with creating a user profile directory.\nYour personal settings will not be saved until it's fixed.\n\n\nMake sure that the Dragon has permission to write to the user's home directory."));
 
-
-    //this->exit(0);
+    this->exit(0);
 }
 
 void DragonBrowser::authorizationRequest(QNetworkReply* reply, QAuthenticator* auth)

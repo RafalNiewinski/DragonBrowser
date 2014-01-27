@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QtGui>
+#include <QVBoxLayout>
 
 #include "historyview.h"
 

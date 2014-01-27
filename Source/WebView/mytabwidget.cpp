@@ -27,6 +27,12 @@ void MyTabWidget::updateSize()
 
 void MyTabWidget::prepareTabBarSize()
 {
+    if(this->count() == 0)
+    {
+        this->tabBar()->setStyleSheet(QString("QTabBar::tab { width: %1px }").arg(MAXIMUM_TAB_WIDTH));
+        return;
+    }
+
     int size = this->tabBar()->size().width() / this->count();
     if(size > MAXIMUM_TAB_WIDTH) this->tabBar()->setStyleSheet(QString("QTabBar::tab { width: %1px }").arg(MAXIMUM_TAB_WIDTH));
     else this->tabBar()->setStyleSheet(QString("QTabBar::tab { width: %1px }").arg(size));

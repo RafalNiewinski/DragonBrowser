@@ -36,6 +36,7 @@ void tab::createUi()
     weblayout->setMargin(0);
 
     urlAddress = new MyLineEdit();
+    urlAddress->setProgress(0);
     urlAddress->setText("");
 
     suggester = new GoogleSuggest(urlAddress);
@@ -67,29 +68,29 @@ void tab::createUi()
 
 void tab::createSettings()
 {
-    webView->settings()->setAttribute(QWebSettings::AutoLoadImages, configLoader->AutoLoadImages);
-    webView->settings()->setAttribute(QWebSettings::DnsPrefetchEnabled, configLoader->DnsPrefetchEnabled);
-    webView->settings()->setAttribute(QWebSettings::JavascriptEnabled, configLoader->JavascriptEnabled);
-    webView->settings()->setAttribute(QWebSettings::JavaEnabled, configLoader->JavaEnabled);
-    webView->settings()->setAttribute(QWebSettings::PluginsEnabled, configLoader->PluginsEnabled);
-    webView->settings()->setAttribute(QWebSettings::PrivateBrowsingEnabled, configLoader->PrivateBrowsingEnabled);
-    webView->settings()->setAttribute(QWebSettings::JavascriptCanOpenWindows, configLoader->JavascriptCanOpenWindows);
-    webView->settings()->setAttribute(QWebSettings::JavascriptCanAccessClipboard, configLoader->JavascriptCanAccessClipboard);
-    webView->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, configLoader->DeveloperExtrasEnabled);
-    webView->settings()->setAttribute(QWebSettings::SpatialNavigationEnabled, configLoader->SpatialNavigationEnabled);
-    webView->settings()->setAttribute(QWebSettings::LinksIncludedInFocusChain, configLoader->LinksIncludedInFocusChain);
-    webView->settings()->setAttribute(QWebSettings::ZoomTextOnly, configLoader->ZoomTextOnly);
-    webView->settings()->setAttribute(QWebSettings::PrintElementBackgrounds, configLoader->PrintElementBackgrounds);
-    webView->settings()->setAttribute(QWebSettings::OfflineStorageDatabaseEnabled, configLoader->OfflineStorageDatabaseEnabled);
-    webView->settings()->setAttribute(QWebSettings::OfflineWebApplicationCacheEnabled, configLoader->OfflineWebApplicationCacheEnabled);
-    webView->settings()->setAttribute(QWebSettings::LocalStorageEnabled, configLoader->LocalStorageEnabled);
-    webView->settings()->setAttribute(QWebSettings::LocalContentCanAccessRemoteUrls, configLoader->LocalContentCanAccessRemoteUrls);
-    webView->settings()->setAttribute(QWebSettings::LocalContentCanAccessFileUrls, configLoader->LocalContentCanAccessFileUrls);
-    webView->settings()->setAttribute(QWebSettings::XSSAuditingEnabled, configLoader->XSSAuditingEnabled);
-    webView->settings()->setAttribute(QWebSettings::AcceleratedCompositingEnabled, configLoader->AcceleratedCompositingEnabled);
-    webView->settings()->setAttribute(QWebSettings::TiledBackingStoreEnabled, configLoader->TiledBackingStoreEnabled);
-    webView->settings()->setAttribute(QWebSettings::FrameFlatteningEnabled, configLoader->FrameFlatteningEnabled);
-    webView->settings()->setAttribute(QWebSettings::SiteSpecificQuirksEnabled, configLoader->SiteSpecificQuirksEnabled);
+    webView->settings()->setAttribute(QWebSettings::AutoLoadImages, configLoader->getOption("AutoLoadImages").toBool());
+    webView->settings()->setAttribute(QWebSettings::DnsPrefetchEnabled, configLoader->getOption("DnsPrefetchEnabled").toBool());
+    webView->settings()->setAttribute(QWebSettings::JavascriptEnabled, configLoader->getOption("JavascriptEnabled").toBool());
+    webView->settings()->setAttribute(QWebSettings::JavaEnabled, configLoader->getOption("JavaEnabled").toBool());
+    webView->settings()->setAttribute(QWebSettings::PluginsEnabled, configLoader->getOption("PluginsEnabled").toBool());
+    webView->settings()->setAttribute(QWebSettings::PrivateBrowsingEnabled, configLoader->getOption("PrivateBrowsingEnabled").toBool());
+    webView->settings()->setAttribute(QWebSettings::JavascriptCanOpenWindows, configLoader->getOption("JavascriptCanOpenWindows").toBool());
+    webView->settings()->setAttribute(QWebSettings::JavascriptCanAccessClipboard, configLoader->getOption("JavascriptCanAccessClipboard").toBool());
+    webView->settings()->setAttribute(QWebSettings::DeveloperExtrasEnabled, configLoader->getOption("DeveloperExtrasEnabled").toBool());
+    webView->settings()->setAttribute(QWebSettings::SpatialNavigationEnabled, configLoader->getOption("SpatialNavigationEnabled").toBool());
+    webView->settings()->setAttribute(QWebSettings::LinksIncludedInFocusChain, configLoader->getOption("LinksIncludedInFocusChain").toBool());
+    webView->settings()->setAttribute(QWebSettings::ZoomTextOnly, configLoader->getOption("ZoomTextOnly").toBool());
+    webView->settings()->setAttribute(QWebSettings::PrintElementBackgrounds, configLoader->getOption("PrintElementBackgrounds").toBool());
+    webView->settings()->setAttribute(QWebSettings::OfflineStorageDatabaseEnabled, configLoader->getOption("OfflineStorageDatabaseEnabled").toBool());
+    webView->settings()->setAttribute(QWebSettings::OfflineWebApplicationCacheEnabled, configLoader->getOption("OfflineWebApplicationCacheEnabled").toBool());
+    webView->settings()->setAttribute(QWebSettings::LocalStorageEnabled, configLoader->getOption("LocalStorageEnabled").toBool());
+    webView->settings()->setAttribute(QWebSettings::LocalContentCanAccessRemoteUrls, configLoader->getOption("LocalContentCanAccessRemoteUrls").toBool());
+    webView->settings()->setAttribute(QWebSettings::LocalContentCanAccessFileUrls, configLoader->getOption("LocalContentCanAccessFileUrls").toBool());
+    webView->settings()->setAttribute(QWebSettings::XSSAuditingEnabled, configLoader->getOption("XSSAuditingEnabled").toBool());
+    webView->settings()->setAttribute(QWebSettings::AcceleratedCompositingEnabled, configLoader->getOption("AcceleratedCompositingEnabled").toBool());
+    webView->settings()->setAttribute(QWebSettings::TiledBackingStoreEnabled, configLoader->getOption("TiledBackingStoreEnabled").toBool());
+    webView->settings()->setAttribute(QWebSettings::FrameFlatteningEnabled, configLoader->getOption("FrameFlatteningEnabled").toBool());
+    webView->settings()->setAttribute(QWebSettings::SiteSpecificQuirksEnabled, configLoader->getOption("SiteSpecificQuirksEnabled").toBool());
 
     //DATABASE CATALOG PATH TO STORAGE FAVICONS
     webView->settings()->setIconDatabasePath(configLoader->DragonUserDirPath() + "/icons");
