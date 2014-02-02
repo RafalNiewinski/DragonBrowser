@@ -35,13 +35,11 @@ void tab::createUi()
     weblayout = new QVBoxLayout();
     weblayout->setMargin(0);
 
-    urlAddress = new MyLineEdit();
+    urlAddress = new AddressBar();
     urlAddress->setProgress(0);
     urlAddress->setText("");
 
-    suggester = new GoogleSuggest(urlAddress);
-
-    url.setUrl("http://google.pl/");
+    addressCompleter = new AddressCompleter(urlAddress);
 
     webView = new QWebView();
     if(webPage == NULL) webPage = new MyWebPage(configLoader);
@@ -112,8 +110,8 @@ void tab::createSettings()
 void tab::createConnects()
 {
     connect(urlAddress, SIGNAL(returnPressed()), this, SLOT(newUrl()));
+    connect(addressCompleter, SIGNAL(itemChoosed(QString)), this, SLOT(newUrl(QString)));
     connect(webView, SIGNAL(urlChanged(QUrl)), this, SLOT(urlChanged(QUrl)));
-    //connect(webView, SIGNAL(iconChanged()), this, SLOT(changeIcon()));
     connect(webView, SIGNAL(titleChanged(QString)), this, SLOT(chTitle(QString)));
     connect(webView, SIGNAL(iconChanged()), this, SLOT(chIcon()));
     connect(webView, SIGNAL(statusBarMessage(QString)), this, SLOT(statusBarMessage(QString)));
@@ -134,28 +132,29 @@ void tab::urlChanged(QUrl url)
     urlAddress->setText(url.toString());
 }
 
-void tab::newUrl()
-{    
-    QString adress;
-    adress = urlAddress->text();
+void tab::newUrl(QString address)
+{
+    webView->setFocus();
 
-    if(adress.indexOf(":", 1) != -1 && adress.indexOf(" ") == -1)
+    if(address.isEmpty()) address = urlAddress->text();
+
+    if(address.indexOf(":", 1) != -1 && address.indexOf(" ") == -1)
     {
-        url.setUrl(adress);
+        url.setUrl(address);
         webView->load(url);
         return;
     }
-    if(adress.indexOf(".", 1) != -1 && adress.indexOf(" ") == -1)
+    if(address.indexOf(".", 1) != -1 && address.indexOf(" ") == -1)
     {
-        adress = "http://"+adress;
-        url.setUrl(adress);
+        address = "http://"+address;
+        url.setUrl(address);
         webView->load(url);
         return;
     }
 
     //IF ADRESS NOT VALID SEARCH WITH GOOGLE
-    adress = QString(GSEARCH_URL).arg(adress);
-    url.setUrl(adress);
+    address = QString(GSEARCH_URL).arg(address);
+    url.setUrl(address);
     webView->load(url);
 }
 

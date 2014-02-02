@@ -1,12 +1,14 @@
-#include "mylineedit.h"
+#include "addressbar.h"
 
-MyLineEdit::MyLineEdit()
+#include <QCompleter>
+
+AddressBar::AddressBar()
 {
     QLineEdit();
     this->setMinimumHeight(20);
 }
 
-void MyLineEdit::initStyleOption(QStyleOptionFrameV2 *option) const
+void AddressBar::initStyleOption(QStyleOptionFrameV2 *option) const
 {
     option->initFrom(this);
     option->rect = contentsRect();
@@ -17,7 +19,7 @@ void MyLineEdit::initStyleOption(QStyleOptionFrameV2 *option) const
     option->features = QStyleOptionFrameV2::None;
 }
 
-QLinearGradient MyLineEdit::generateGradient(const QColor &color) const
+QLinearGradient AddressBar::generateGradient(const QColor &color) const
 {
     QLinearGradient gradient(0, 0, 0, height());
     gradient.setColorAt(0, QColor::fromRgb(255, 255, 255));
@@ -28,7 +30,7 @@ QLinearGradient MyLineEdit::generateGradient(const QColor &color) const
     return gradient;
 }
 
-void MyLineEdit::paintEvent(QPaintEvent * event)
+void AddressBar::paintEvent(QPaintEvent * event)
 {
     QPainter p(this);
     QStyleOptionFrameV2 panel;
@@ -56,7 +58,7 @@ void MyLineEdit::paintEvent(QPaintEvent * event)
     }
 }
 
-void MyLineEdit::setProgress(int percent)
+void AddressBar::setProgress(int percent)
 {
     progress = percent;
 }

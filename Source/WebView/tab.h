@@ -11,9 +11,9 @@
 #endif
 
 #include "Config/configmanager.h"
-#include "googlesuggest.h"
 #include "mywebpage.h"
-#include "mylineedit.h"
+#include "Navigation/addressbar.h"
+#include "Navigation/addresscompleter.h"
 #include "History/historymanager.h"
 #include "Cloud/clouddialog.h"
 #include "Cloud/cloudmanager.h"
@@ -39,12 +39,12 @@ private:
 
     QToolBar *toolBar;
 
-    MyLineEdit* urlAddress;
+    AddressBar* urlAddress;
     QUrl url;
 
     QPoint clickPos;
 
-    GoogleSuggest *suggester;
+    AddressCompleter *addressCompleter;
 
     void createUi();
     void createSettings();
@@ -64,7 +64,7 @@ public slots:
     void downloadRequset(QNetworkRequest request);
     void openLinkInNewTab();
 
-    void newUrl();
+    void newUrl(QString address = "");
     void urlChanged(QUrl url);
     void statusBarMessage(QString message);
     void selectionChange();

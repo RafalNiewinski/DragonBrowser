@@ -30,14 +30,12 @@ HEADERS += \
     Download/downloadmanager.h \
     WebView/tab.h \
     WebView/mainwindow.h \
-    WebView/googlesuggest.h \
     WebView/authdialog.h \
     WebView/mywebpage.h \
     WebView/mytabwidget.h \
     API/dragoninterface.h \
     API/dragonpluginmanager.h \
     Config/databasemanager.h \
-    WebView/mylineedit.h \
     History/historymanager.h \
     3rdParty/fancytabwidget.h \
     3rdParty/stylehelper.h \
@@ -50,7 +48,10 @@ HEADERS += \
     3rdParty/qtsingleapplication/qtlockedfile.h \
     3rdParty/qtsingleapplication/qtsinglecoreapplication.h \
     3rdParty/qtsingleapplication/qtsingleapplication.h \
-    3rdParty/qtsingleapplication/qtlocalpeer.h
+    3rdParty/qtsingleapplication/qtlocalpeer.h \
+    Navigation/addressbar.h \
+    Navigation/addresscompleter.h \
+    Navigation/addresscompleterdelegate.h
 
 SOURCES += \
     Config/pages.cpp \
@@ -61,14 +62,12 @@ SOURCES += \
     Download/downloadmanager.cpp \
     WebView/tab.cpp \
     WebView/mainwindow.cpp \
-    WebView/googlesuggest.cpp \
     main.cpp \
     WebView/authdialog.cpp \
     WebView/mywebpage.cpp \
     WebView/mytabwidget.cpp \
     API/dragonpluginmanager.cpp \
     Config/databasemanager.cpp \
-    WebView/mylineedit.cpp \
     History/historymanager.cpp \
     3rdParty/fancytabwidget.cpp \
     3rdParty/stylehelper.cpp \
@@ -82,4 +81,7 @@ SOURCES += \
     3rdParty/qtsingleapplication/qtlockedfile_unix.cpp \
     3rdParty/qtsingleapplication/qtlockedfile.cpp \
     3rdParty/qtsingleapplication/qtsingleapplication.cpp \
-    3rdParty/qtsingleapplication/qtlocalpeer.cpp
+    3rdParty/qtsingleapplication/qtlocalpeer.cpp \
+    Navigation/addressbar.cpp \
+    Navigation/addresscompleter.cpp \
+    Navigation/addresscompleterdelegate.cpp

@@ -6,10 +6,10 @@
 #include <QPainter>
 #include <QLinearGradient>
 
-class MyLineEdit : public QLineEdit
+class AddressBar : public QLineEdit
 {
 public:
-    MyLineEdit();
+    AddressBar();
 
     virtual void paintEvent(QPaintEvent *);
     void setProgress(int percent);
