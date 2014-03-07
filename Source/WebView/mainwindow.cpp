@@ -48,6 +48,18 @@ void MainWindow::createFileActions()
     viewSourceAction = new QAction(tr("Source code"), this);
     connect(viewSourceAction, SIGNAL(triggered()), SLOT(viewSource()));
 
+    resetZoomAction = new QAction(tr("Reset zoom"), this);
+    resetZoomAction->setShortcut(Qt::CTRL + Qt::Key_0);
+    connect(resetZoomAction, SIGNAL(triggered()), this, SLOT(resetZoom()));
+
+    zoomInAction = new QAction(tr("Zoom in"), this);
+    zoomInAction->setShortcut(Qt::CTRL + Qt::Key_Plus);
+    connect(zoomInAction, SIGNAL(triggered()), this, SLOT(zoomIn()));
+
+    zoomOutAction = new QAction(tr("Zoom out"), this);
+    zoomOutAction->setShortcut(Qt::CTRL + Qt::Key_Minus);
+    connect(zoomOutAction, SIGNAL(triggered()), this, SLOT(zoomOut()));
+
     historyManagerAction = new QAction(tr("History manager"), this);
     connect(historyManagerAction, SIGNAL(triggered()), this, SLOT(showLibraryHistory()));
 
@@ -85,7 +97,10 @@ void MainWindow::createMenus()
     viewMenu = new QMenu(tr("View"), this);
     menuBar()->addMenu(viewMenu);
     viewMenu->addAction(viewSourceAction);
-    //viewMenu->addSeparator();
+    viewMenu->addSeparator();
+    viewMenu->addAction(resetZoomAction);
+    viewMenu->addAction(zoomInAction);
+    viewMenu->addAction(zoomOutAction);
     //viewMenu->addAction(tr("Highlight all links"), this, SLOT(highlightAllLinks()));
     //viewMenu->addAction(tr("Remove all object elements"), this, SLOT(removeObjectElements()));
     //viewMenu->addAction(tr("Remove all embedded elements"), this, SLOT(removeEmbeddedElements()));
@@ -396,4 +411,22 @@ void MainWindow::cloudActionCalled()
 {
     CloudDialog *dialog = new CloudDialog();
     dialog->exec();
+}
+
+void MainWindow::resetZoom()
+{
+    tab *tabwidget = (tab*)tabs->currentWidget();
+    tabwidget->webView->setZoomFactor(1.00);
+}
+
+void MainWindow::zoomIn()
+{
+    tab *tabwidget = (tab*)tabs->currentWidget();
+    tabwidget->webView->setZoomFactor(tabwidget->webView->zoomFactor() + 0.10);
+}
+
+void MainWindow::zoomOut()
+{
+    tab *tabwidget = (tab*)tabs->currentWidget();
+    tabwidget->webView->setZoomFactor(tabwidget->webView->zoomFactor() - 0.10);
 }

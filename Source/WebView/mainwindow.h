@@ -36,6 +36,9 @@ private:
 
     QMenu *viewMenu;
     QAction* viewSourceAction;
+    QAction* resetZoomAction;
+    QAction* zoomInAction;
+    QAction* zoomOutAction;
 
     QMenu* historyMenu;
     QAction* historyManagerAction;
@@ -97,6 +100,9 @@ public slots:
     bool restoreSession();
     void cloudStatusChanged(CloudManager::CloudState state);
     void cloudActionCalled();
+    void resetZoom();
+    void zoomIn();
+    void zoomOut();
 
 };
 
