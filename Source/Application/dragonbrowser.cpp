@@ -38,6 +38,7 @@ DragonBrowser::DragonBrowser(int &argc, char** argv) : QtSingleApplication(argc,
         if(!configurationLoader->loadConfiguration()) QMessageBox::warning(mainWindows.last().data(), ("Configuration Error"), ("Loading your browser settings failed. Loaded default settings."));
         if(!cookieJar->loadAllCookies()) QMessageBox::warning(mainWindows.last().data(), ("Cookies Error"), ("Loading cookies failed. The browser will work without them."));
         if(!databaseManager->openConnection()) QMessageBox::warning(mainWindows.last().data(), ("Database Error"), ("A problem with database is detected: " + databaseManager->getError().text()));
+        historyManager->checkDatabase();
 
         downloadManager = new DownloadManager();
 
@@ -48,6 +49,7 @@ DragonBrowser::DragonBrowser(int &argc, char** argv) : QtSingleApplication(argc,
     }
     else
     {
+        configurationLoader->loadDefaults();
         downloadManager = new DownloadManager();
         mainWindows.last().data()->createStandardTab();
 

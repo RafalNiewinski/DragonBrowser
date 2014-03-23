@@ -1,8 +1,17 @@
 #include "historymanager.h"
+#include "Application/dragonbrowser.h"
 
 HistoryManager::HistoryManager()
 {
-    this->dbMan = dbMan;
+}
+
+void HistoryManager::checkDatabase()
+{
+    if(!dApp->getDatabaseManager()->getDatabase().tables().contains("history"))
+    {
+        QSqlQuery query;
+        query.exec("CREATE TABLE history (\"id\" INTEGER PRIMARY KEY, \"title\" TEXT, \"url\" TEXT, \"date\" TEXT, \"count\" INT)");
+    }
 }
 
 bool HistoryManager::addItem(QWebHistoryItem item)

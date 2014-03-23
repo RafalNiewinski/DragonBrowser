@@ -23,14 +23,13 @@ class HistoryManager
 public:
     HistoryManager();
 
+    static void checkDatabase();
+
     static bool addItem(QWebHistoryItem item);
     static bool addItem(QString title, QUrl url);
     static bool addItem(QString title, QString url);
 
     static QList<HistoryEntry> fullHistory();
-
-private:
-    DatabaseManager* dbMan;
 };
 
 #endif // HISTORYMANAGER_H

@@ -23,3 +23,8 @@ QSqlQuery DatabaseManager::execute(QString query)
 {
     return database.exec(query);
 }
+
+QSqlDatabase DatabaseManager::getDatabase()
+{
+    return database;
+}
