@@ -18,7 +18,17 @@ bool MyWebPage::supportsExtension(Extension extension) const
 
 bool MyWebPage::extension(Extension extension, const ExtensionOption *option, ExtensionReturn *output)
 {
-    if(extension == ChooseMultipleFilesExtension) return true;
+    if(extension == ChooseMultipleFilesExtension)
+    {
+        const QWebPage::ChooseMultipleFilesExtensionOption* mfeOption = static_cast<const QWebPage::ChooseMultipleFilesExtensionOption*>(option);
+        QWebPage::ChooseMultipleFilesExtensionReturn* mfeReturn = static_cast<QWebPage::ChooseMultipleFilesExtensionReturn*>(output);
+
+        if(!mfeOption || !mfeReturn)
+            return QWebPage::extension(extension, option, output);
+
+        mfeReturn->fileNames = QFileDialog::getOpenFileNames(0, tr("Select files to upload"));
+        return true;
+    }
 
     const ErrorPageExtensionOption* exOption = static_cast<const QWebPage::ErrorPageExtensionOption*>(option);
     ErrorPageExtensionReturn* exReturn = static_cast<QWebPage::ErrorPageExtensionReturn*>(output);
