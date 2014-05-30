@@ -90,6 +90,7 @@ MainWindow* DragonBrowser::newWindow(QUrl url)
 bool DragonBrowser::removeWindow(MainWindow *window)
 {
     if(mainWindows.count() == 1) exitApplication();
+    delete window;
     return mainWindows.removeOne(window);
 }
 
