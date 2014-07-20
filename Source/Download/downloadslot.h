@@ -15,6 +15,7 @@ class DownloadSlot : public QWidget
     Q_OBJECT
 public:
     DownloadSlot(QUrl url);
+    ~DownloadSlot();
 
     QUrl fileUrl;
     QVBoxLayout *mainLayout;

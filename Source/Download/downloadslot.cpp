@@ -29,6 +29,23 @@ DownloadSlot::DownloadSlot(QUrl url)
     connect(actionButton, SIGNAL(clicked()), this, SLOT(buttonAction()));
 }
 
+DownloadSlot::~DownloadSlot()
+{
+    disconnect(actionButton, SIGNAL(clicked()));
+    disconnect(currentDownload, SIGNAL(downloadProgress(qint64,qint64)));
+    disconnect(currentDownload, SIGNAL(finished()));
+    disconnect(currentDownload, SIGNAL(readyRead()));
+
+    delete fileName;
+    delete progressBar;
+    delete speedLabel;
+    delete sizeLabel;
+    delete actionButton;
+    delete downLayout;
+    delete mainLayout;
+    delete currentDownload;
+}
+
 bool DownloadSlot::start()
 {
     if(!prepareFile())
