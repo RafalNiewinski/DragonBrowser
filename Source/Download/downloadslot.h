@@ -44,7 +44,7 @@ public:
     state status;
 
 public slots:
-    void start();
+    bool start();
 
     bool prepareFile();
     bool startDownload();

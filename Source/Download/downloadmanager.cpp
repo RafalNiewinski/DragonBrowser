@@ -19,9 +19,15 @@ void DownloadManager::startDownload(QNetworkRequest request)
 void DownloadManager::startDownload(QNetworkReply *reply)
 {
     DownloadSlot *download = new DownloadSlot(reply->url());
+
+    if(!download->start())
+    {
+        delete download;
+        return;
+    }
+
     mainLayout->addWidget(download);
     downloads.append(download);
-    download->start();
 
     if(!this->isVisible()) this->show();
     if(!this->isActiveWindow()) this->activateWindow();

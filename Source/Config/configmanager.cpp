@@ -65,6 +65,8 @@ bool ConfigManager::loadDefaults()
     EnableHistory = true;
     setOption("EnableHistory", true);
 
+    setOption("StaticSavePath", false);
+
     if(saveConfiguration()) return true;
     else return false;
 }

@@ -1,4 +1,5 @@
 #include "downloadslot.h"
+#include "Application/dragonbrowser.h"
 
 DownloadSlot::DownloadSlot(QUrl url)
 {
@@ -28,32 +29,58 @@ DownloadSlot::DownloadSlot(QUrl url)
     connect(actionButton, SIGNAL(clicked()), this, SLOT(buttonAction()));
 }
 
-void DownloadSlot::start()
+bool DownloadSlot::start()
 {
-    if(!prepareFile()) status = ERROR;
-    else if (!startDownload()) status = ERROR;
+    if(!prepareFile())
+    {
+        status = ERROR;
+        return false;
+    }
+    else if (!startDownload())
+    {
+        status = ERROR;
+        return false;
+    }
+
+    return true;
 }
 
 bool DownloadSlot::prepareFile()
 {
     QString name = QFileInfo(fileUrl.path()).fileName();
-
     if (name.isEmpty()) name = "download";
 
-    if (QFile::exists(name))
+    if(dApp->getConfigManager()->getOption("StaticSavePath").toBool() == true && !dApp->getConfigManager()->getOption("SavePath").toString().isEmpty() && QDir(dApp->getConfigManager()->getOption("SavePath").toString()).exists())
     {
-        int i = 0;
-        name += '.';
-        while (QFile::exists(name + QString::number(i))) ++i;
+        if (QFile::exists(dApp->getConfigManager()->getOption("SavePath").toString() + "/" + name))
+        {
+            int i = 0;
+            name += '.';
+            while (QFile::exists(name + QString::number(i))) ++i;
 
-        name += QString::number(i);
+            name += QString::number(i);
+        }
+
+        output.setFileName(dApp->getConfigManager()->getOption("SavePath").toString() + "/" + name);
+    }
+    else
+    {
+        QString savePath = dApp->getConfigManager()->getOption("LastSavePath").toString();
+
+        if(!savePath.isEmpty() && QDir(savePath).exists())
+            output.setFileName(QFileDialog::getSaveFileName(0, tr("Save file"), savePath + "/" + name));
+        else
+            output.setFileName(QFileDialog::getSaveFileName(0, tr("Save file"), QDir::homePath() + "/" + name));
+
+        if(output.fileName().isEmpty()) return false;
+
     }
 
-    output.setFileName(name);
-
-    fileName->setText(name);
+    fileName->setText(QFileInfo(output.fileName()).fileName());
 
     if (!output.open(QIODevice::WriteOnly)) return false;
+
+    dApp->getConfigManager()->setOption("LastSavePath", QFileInfo(output.fileName()).dir().absolutePath());
 
     return true;
 }

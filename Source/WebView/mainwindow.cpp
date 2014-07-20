@@ -35,6 +35,7 @@ void MainWindow::createFileActions()
     connect(newWindowAction, SIGNAL(triggered()), this, SLOT(newWindow()));
 
     saveAsImageAction = new QAction(tr("Save screenshoot of page"), this);
+    connect(saveAsImageAction, SIGNAL(triggered()), this, SLOT(saveAsImage()));
     //saveAsImageAction->setShortcut();
 
     printPageAction = new QAction(tr("Print page"), this);
@@ -155,7 +156,6 @@ void MainWindow::createUi()
 
 void MainWindow::createConnects()
 {
-    connect(saveAsImageAction, SIGNAL(triggered()), this, SLOT(saveAsImage()));
     connect(addTabButton, SIGNAL(clicked()), this, SLOT(createStandardTab()));
     connect(tabs, SIGNAL(tabCloseRequested(int)), this, SLOT(deleteTab(int)));
     connect(tabs, SIGNAL(currentChanged(int)), this, SLOT(setTitle(int)));
