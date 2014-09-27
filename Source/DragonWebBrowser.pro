@@ -10,7 +10,7 @@ contains(QT_VERSION, 4.6)
 }
 contains(QT_VERSION, 5.0)
 {
-    QT       += core widgets network webkit webkitwidgets sql
+    QT       += core widgets network webkit webkitwidgets sql printsupport
 }
 
 TARGET = DragonWebBrowser
@@ -46,7 +46,6 @@ HEADERS += \
     Cloud/clouddialog.h \
     Application/dragonbrowser.h \
     3rdParty/qtsingleapplication/qtlockedfile.h \
-    3rdParty/qtsingleapplication/qtsinglecoreapplication.h \
     3rdParty/qtsingleapplication/qtsingleapplication.h \
     3rdParty/qtsingleapplication/qtlocalpeer.h \
     Navigation/addressbar.h \

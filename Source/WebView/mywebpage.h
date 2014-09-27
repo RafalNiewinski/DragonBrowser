@@ -30,6 +30,15 @@ public:
 
             return QString("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/" + qWebKitVersion() + " (KHTML, like Gecko) DragonBrowser/" + ConfigManager::DragonVersion() + " Safari/" + qWebKitVersion());
         #endif
+
+        #ifdef Q_OS_WIN
+            //user agent for GOOGLE SEARCH PAGE
+            if(url.toString().toStdString().substr(0, 18) == "http://www.google." || url.toString().toStdString().substr(0, 19) == "https://www.google.")
+                return QString("Mozilla/5.0 (Windows) AppleWebKit/537.4 (KHTML, like Gecko) Chrome/22.0.1229.92 Safari/537.4");
+
+
+            return QString("Mozilla/5.0 (Windows) AppleWebKit/" + qWebKitVersion() + " (KHTML, like Gecko) DragonBrowser/" + ConfigManager::DragonVersion() + " Safari/" + qWebKitVersion());
+        #endif
     }
 
     QWebPage* createWindow(WebWindowType type)

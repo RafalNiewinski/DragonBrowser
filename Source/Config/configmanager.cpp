@@ -92,12 +92,14 @@ QString ConfigManager::DragonUserDirPath()
     QString env = getenv("HOME");
     return env + "/.DragonWebBrowser";
 #endif
+
+#ifdef Q_OS_WIN
+    return QStandardPaths::writableLocation(QStandardPaths::DataLocation);
+#endif
 }
 
 bool ConfigManager::checkSystemDir()
 {
-    #ifdef Q_OS_LINUX
-
     if(QDir(DragonUserDirPath()).exists() != true)
         if(QDir().mkdir(DragonUserDirPath()) != true) return false;
 
@@ -108,8 +110,6 @@ bool ConfigManager::checkSystemDir()
         if(QDir().mkdir(DragonUserDirPath() + "/icons") != true) return false;
 
     return true;
-
-    #endif
 }
 
 bool ConfigManager::saveSessionData(QList<QString>* urls)

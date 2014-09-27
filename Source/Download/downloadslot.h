@@ -39,7 +39,7 @@ public:
         IDLE,
         DOWNLOADING,
         ABORTED,
-        ERROR
+        ERR
     };
 
     state status;

@@ -1,3 +1,5 @@
+#include <QtPrintSupport/QPrintPreviewDialog>
+
 #include "tab.h"
 
 #define GSEARCH_URL "http://www.google.com/search?q=%1"

@@ -50,12 +50,12 @@ bool DownloadSlot::start()
 {
     if(!prepareFile())
     {
-        status = ERROR;
+        status = ERR;
         return false;
     }
     else if (!startDownload())
     {
-        status = ERROR;
+        status = ERR;
         return false;
     }
 
@@ -144,7 +144,7 @@ void DownloadSlot::downloadEnded()
     if(currentDownload->error())
     {
         //download ERROR
-        status = ERROR;
+        status = ERR;
     }
     else status = DOWNLOADED;
     buttonAction();
@@ -187,6 +187,6 @@ void DownloadSlot::buttonAction()
 {
     if(status == DOWNLOADING) stopDownload();
     else if(status == DOWNLOADED) actionButton->hide();
-    else if(status == ERROR) actionButton->hide();
+    else if(status == ERR) actionButton->hide();
     else if(status == ABORTED) actionButton->hide();
 }
