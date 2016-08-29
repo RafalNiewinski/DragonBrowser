@@ -1,1 +1,2 @@
-Here rise instruction
+Deprecated project
+If you want to build web browser (or browser like component) with Qt... use QtWebEngine instead of QtWebKit (deprecated in Qt 5.5).
